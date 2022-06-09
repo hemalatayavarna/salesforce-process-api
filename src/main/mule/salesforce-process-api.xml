@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd ">
+    <flow name="salesforce-process-api-main" doc:id="34204521-c88c-4334-bf53-53e79fb8eac1">
+        <http:listener config-ref="salesforce-process-api-httpListenerConfig" path="${api.http.path}${api.http.version}" doc:name="HTTP Listener for salesforce Process API">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="salesforce-process-api-config" />
+		<error-handler ref="api-kit-error-handler" />
+    </flow>
+    <flow name="get:\health:salesforce-process-api-config" doc:id="69a19eb9-cfd9-4798-8ed1-9ed4f3ae906b">
+		<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:name="Get Health Check">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+import p from Mule
+output application/json
+---
+{
+  name: p('system.context'),
+  status: "OK",
+  timestamp: now() >> p('property.timezone')
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+		<error-handler ref="business-error-handler" />
+    </flow>
+	<flow name="get:\students:salesforce-process-api-config" doc:id="fd992dc4-cbfc-4ea8-bc52-0967bd5ced88" >
+		<logger level="INFO" doc:name="Log Start Get Students Data" doc:id="cbfe32b8-b438-4b47-bd38-aaa8ef3686c6" message='Start Get Students Data' />
+		<flow-ref doc:name="impl-salesforce-process-api:students:sub_flow" doc:id="be84ebdd-5974-489b-a8f3-c8852da667b0" name="impl-salesforce-process-api:students:sub_flow" />
+		<logger level="INFO" doc:name="Log End Get Students Data" doc:id="0c82bdfb-a583-4bbb-9317-91e99a301642" message='End Get Students Data' />
+		<error-handler ref="business-error-handler" />
+	</flow>
+	<flow name="salesforce-process-api:scheduler-students-integration:flow" doc:id="34667587-a835-4740-80d6-dc0ce543a6be" >
+		<scheduler doc:name="Scheduler" doc:id="29f99632-f88c-4a3a-8e9b-031ab5efe784" >
+			<scheduling-strategy >
+				<cron expression="${common.students.cronjob.expression}" />
+			</scheduling-strategy>
+		</scheduler>
+		<logger level="INFO" doc:name="Log Start Students Scheduler" doc:id="a75231ca-8c10-4d9e-8f5d-4940f7eae439" message="Start Students Scheduler"/>
+		<flow-ref doc:name="impl-salesforce-process-api:students:sub_flow" doc:id="509464f5-c434-46a0-86ec-745ea7efc81e" name="impl-salesforce-process-api:students:sub_flow"/>
+		<logger level="INFO" doc:name="Log End Students Scheduler" doc:id="ead61976-e604-4967-a486-a1e5b489a9d5" message="End Students Scheduler" />
+		<error-handler ref="business-error-handler" />
+	</flow>
+	<flow name="salesforce-process-api:scheduler-students-guardians-integration:flow" doc:id="a8204390-26bc-4095-a58c-095a23bc63ae" >
+		<scheduler doc:name="Scheduler" doc:id="5a589e57-138f-4445-a9d9-0ee3b8e71ecd" >
+			<scheduling-strategy >
+				<cron expression="${common.students.guardians.cronjob.expression}" />
+			</scheduling-strategy>
+		</scheduler>
+		<logger level="INFO" doc:name="Log Start Guardians Scheduler" doc:id="c7162f89-dac3-43a6-9ea2-75632bfc7c1c" message="Start Guardians Scheduler" />
+		<flow-ref doc:name="impl-salesforce-process-api:students-guardians:sub_flow" doc:id="93e2b689-59b1-4d37-8512-d63f86dfad23" name="impl-salesforce-process-api:students-guardians:sub_flow" />
+		<logger level="INFO" doc:name="Log End Guardians Scheduler" doc:id="41d5b5c2-3b56-4ab5-9089-7d0044ec09e0" message="End Guardians Scheduler" />
+		<error-handler ref="business-error-handler" />
+	</flow>
+	<flow name="salesforce-process-api:scheduler:staff-integration:flow" doc:id="f8165466-cbfe-4b75-935c-ccfa5c1517bc" >
+		<scheduler doc:name="Scheduler" doc:id="eacb8cc1-fb3b-46b3-af69-85de1144490c" >
+			<scheduling-strategy >
+				<cron expression="${common.staffs.cronjob.expression}"/>
+			</scheduling-strategy>
+		</scheduler>
+		<logger level="INFO" doc:name="Log Start Staff Scheduler" doc:id="dded22dc-a257-434a-8360-11c002397157" message="Start Staff Scheduler"/>
+		<flow-ref doc:name="impl-process-salesforce-api:staff:sub_flow" doc:id="7b607ba7-27c6-43a3-8405-e4e17a3e9297" name="impl-process-salesforce-api:staff:sub_flow"/>
+		<logger level="INFO" doc:name="Log End Staff Scheduler" doc:id="69905d03-f661-4b56-b192-6087d5ad7815" message="End Staff Scheduler"/>
+		<error-handler ref="business-error-handler" />
+	</flow>
+	<flow name="salesforce-process-api:scheduler:relationships-integration:flow" doc:id="5d929b4b-fbec-47ee-b16d-94d100a8557f">
+		<scheduler doc:name="Scheduler" doc:id="e83c0957-a7e7-41c5-ac8b-4462758241b7">
+			<scheduling-strategy>
+				<cron expression="${common.relationships.cronjob.expression}" />
+			</scheduling-strategy>
+		</scheduler>
+		<logger level="INFO" doc:name="Log Start Relationship Scheduler" doc:id="08bfdbb2-1009-4dda-bec5-71ea995ff38a" message="Start Relationship Scheduler" />
+		<flow-ref doc:name="impl-process-salesforce-api-students-guardians-relationship:sub_flow" doc:id="1f7b552f-4b00-4fb3-a159-4581b2bbe84c" name="impl-process-salesforce-api-students-guardians-relationship:sub_flow" />
+		<logger level="INFO" doc:name="Log End Relationship Scheduler" doc:id="a17d7639-b913-4b69-8d50-8bd93b6f3c96" message="End Relationship Scheduler" />
+		<error-handler ref="business-error-handler" />
+	</flow>
+	<flow name="salesforce-process-api:scheduler:students-sites-integration:flow" doc:id="e2086d27-3ec4-4d5b-95dd-b6046e4fd590" >
+		<scheduler doc:name="Scheduler" doc:id="93b78c14-6dcd-4838-8502-03891425621c" >
+			<scheduling-strategy >
+				<cron expression="${common.students.sites.cronjob.expression}" />
+			</scheduling-strategy>
+		</scheduler>
+		<logger level="INFO" doc:name="Log Start Students Sites Scheduler" doc:id="bac0ffd8-5ffc-499b-a9e2-644b9598f20a" message="Start Students Sites Scheduler" />
+		<flow-ref doc:name="impl-process-salesforce-api:students-sites:sub_flow" doc:id="6fe75fbc-20e8-42ae-b482-122ef3ef4f97" name="impl-process-salesforce-api:students-sites:sub_flow" />
+		<logger level="INFO" doc:name="Log End Students Sites Scheduler" doc:id="8e02815f-1805-4049-93c4-13e46755047a" message="End Students Sites Scheduler"/>
+		<error-handler ref="business-error-handler" />
+	</flow>
+	<flow name="salesforce-process-api:scheduler:sites-integration:flow" doc:id="4de9c7f9-76ee-46af-9ff6-373e1d40804a" >
+		<scheduler doc:name="Scheduler" doc:id="4b7d1b12-0115-4d69-88aa-58a238061025" >
+			<scheduling-strategy >
+				<cron expression="${common.sites.cronjob.expression}" />
+			</scheduling-strategy>
+		</scheduler>
+		<logger level="INFO" doc:name="Log Start Get Sites Data" doc:id="a9b267f6-c409-4bc8-889a-179b0c9bf246" message="Start Get Sites Data" />
+		<flow-ref doc:name="impl-process-salesforce-sites:subflow" doc:id="9a172303-6a40-4dfd-be6e-1585a0a4651b" name="impl-process-salesforce-sites:subflow"/>
+		<logger level="INFO" doc:name="Log End Get Sites Data" doc:id="039db358-b2d4-4516-928d-594c6e226aa5" message="End Get Sites Data" />
+		<error-handler ref="business-error-handler" />
+	</flow>
+	<flow name="get:\relationships:salesforce-process-api-config" doc:id="0687071b-0968-4a29-be4a-fa307fb8cf50" >
+		<logger level="INFO" doc:name="Log Start Get Relationships Data" doc:id="ff964561-1f6c-4c7c-a012-cebeb9cee244" message="Log Start Get Relationships Data"/>
+		<flow-ref doc:name="impl-process-salesforce-api-students-guardians-relationship:sub_flow" doc:id="63b5c504-ff92-469a-96f2-91b2792bf8b6" name="impl-process-salesforce-api-students-guardians-relationship:sub_flow"/>
+		<logger level="INFO" doc:name="Log End Get Relationships Data" doc:id="5c25d973-e0c1-47fa-a131-42abbea79416" message="End Get Relationships Data"/>
+		<error-handler ref="business-error-handler" />
+	</flow>
+	<flow name="get:\students\guardians:salesforce-process-api-config" doc:id="377efe0b-02c1-43e4-89b7-3900e2b3a2bd" >
+		<logger level="INFO" doc:name="Log Start Get Guardians Data" doc:id="869ea716-3dbc-4285-b7c9-2f992cccea5d" message='Start Get Guardians Data' />
+		<flow-ref doc:name="impl-salesforce-process-api:students-guardians:sub_flow" doc:id="3c5424d9-4743-4962-ad6d-7264837aedd7" name="impl-salesforce-process-api:students-guardians:sub_flow" />
+		<logger level="INFO" doc:name="Log End Get Guardians Data" doc:id="84576c7c-8b0f-4792-8c21-b31d870d5b6f" message='End Get Guardians Data' />
+		<error-handler ref="business-error-handler" />
+	</flow>
+	<flow name="get:\students\sites:salesforce-process-api-config" doc:id="7be9be8f-7430-4e93-9e49-9a13d8d037cd" >
+		<logger level="INFO" doc:name="Log Start Get Sites Data" doc:id="78af8907-2c70-424b-adf9-e17557f485f0" message="Start Get Sites Data"/>
+		<flow-ref doc:name="impl-process-salesforce-api:students-sites:sub_flow" doc:id="4b9a241e-5006-4460-a9c8-b39a6061cef5" name="impl-process-salesforce-api:students-sites:sub_flow"/>
+		<logger level="INFO" doc:name="Log End Get Sites Data" doc:id="6b36b17e-db2e-4675-9bc2-d347522ce723" message="End Get Sites Data"/>
+		<error-handler ref="business-error-handler" />
+	</flow>
+	<flow name="get:\staff:salesforce-process-api-config" doc:id="73b4d306-cdde-4a20-878b-779de86b8266" >
+		<logger level="INFO" doc:name="Log Start Get Staffs Data" doc:id="64789b42-5706-46c7-a03d-f19e129cb559" message="Start Get Staffs Data"/>
+		<flow-ref doc:name="impl-process-salesforce-api:staff:sub_flow" doc:id="303c1fa3-bc23-4beb-ab9d-a216a93d6218" name="impl-process-salesforce-api:staff:sub_flow"/>
+		<logger level="INFO" doc:name="Log End Get Staff Data" doc:id="dbd41434-cdc4-4f15-adbf-740773f4038c" message="End Get Staff Data"/>
+		<error-handler ref="business-error-handler" />
+	</flow>
+	<flow name="get:\sites:salesforce-process-api-config" doc:id="9203803d-3a08-45e7-9217-dc7bb6d2886b" >
+		<logger level="INFO" doc:name="Log Start Get Sites Data" doc:id="aa011751-e38f-406b-8d43-35fbbe55fb5d" message="Start Get Sites Data"/>
+		<flow-ref doc:name="impl-process-salesforce-sites:subflow" doc:id="e2579cc7-2b1d-4b9a-9b87-6776867bd675" name="impl-process-salesforce-sites:subflow"/>
+		<logger level="INFO" doc:name="Log End Get Sites Data" doc:id="fde05a71-add0-425f-b593-2471e876066e" message="End Get Sites Data"/>
+		<error-handler ref="business-error-handler" />
+	</flow>
+</mule>

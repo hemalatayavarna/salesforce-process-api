@@ -1,0 +1,4 @@
+employeeId,firstName,lastName,preferredName,salutation,workEmail,workPhone,workMobile,mainPositionId,mainPositionName,mainRoleId,mainRoleName,gender,isExternal,mainOrgUnitId,mainOrgUnitName,isDepartmentScope,isActive,lastChangedDate
+0000001,Alex,Salieri,Alex,Ms,,,,,,,,Female,false,,,,false,2021-03-19T14:03:07.413
+0100001,Caryll Margaret,Lillecrapp,Caryll,Mrs,Caryll.Lillecrapp983@schools.sa.edu.au,85662008,,7693TRT,Temp Relief Teacher,STCH,School Teacher,Female,false,7677,Temporary Relievers,true,true,2022-03-05T09:00:42.967
+0100220,Margaret Anne,Aistrope,Margaret,Mrs,Margaret.Aistrope950@schools.sa.edu.au,,,,,,,Female,false,,,,false,2021-03-19T14:03:07.413

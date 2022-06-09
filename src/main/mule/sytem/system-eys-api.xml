@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<sub-flow name="system-eys-api:get-eys-students:sub_flow" doc:id="0c5d5e50-3b16-4d5c-8686-e14803f3dc63" >
+		<logger level="INFO" doc:name="Log Start EYS System API" doc:id="c3ec3bba-3914-415c-99f9-70a8e19a2239" message="Start EYS System API Flow"/>
+		<http:request method="GET" doc:name="Get EYS System API Data" doc:id="e26d252c-615a-4e00-a9e8-7024e64b85b0" config-ref="eys-db-system-api-httpRequesterConfig" path="#[vars.httpUriPath]" sendCorrelationId="ALWAYS">
+			<http:headers ><![CDATA[#[vars.httpHeaders]]]></http:headers>
+			<http:query-params ><![CDATA[#[vars.httpQueryParams]]]></http:query-params>
+		</http:request>
+		<logger level="INFO" doc:name="Log End EYS System API" doc:id="b53955ee-97d0-43f7-b3ec-ffac1b9d6a4d" message="End EYS System API"/>
+	</sub-flow>
+</mule>

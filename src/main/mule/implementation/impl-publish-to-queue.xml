@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="impl-publish-to-queue:format-and-send-error-notification-to-mq:subflow" doc:id="181c8ed6-10c8-4d24-82ed-085347f7e6bf" >
+		<logger level="INFO" doc:name="Log Start Set Payload to Publish to Error Handler Queue" doc:id="3e27fae9-36d2-4493-8546-ef4eb02658ff" message="Start Set Payload to Publish to Error Handler Queue"/>
+		<ee:transform doc:name="Set Error Notification Payload for JMS MQ" doc:id="795dd360-9050-4d72-83cc-06647aaf9d22" >
+			<ee:message >
+				<ee:set-payload resource="dwl/error-message.dwl" />
+				
+			
+</ee:message>
+			<ee:variables >
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="sys-jms-mq:publish-message-to-queue:subflow" doc:id="dee0f96e-6e90-47ee-bd86-b77451827001" name="sys-jms-mq:publish-message-to-queue:subflow" />
+		<logger level="INFO" doc:name="Log End Set Payload to Publish to Error Handler Queue" doc:id="ee78887f-8ced-4b30-b70f-f1e8511aedb9" message="End Set Payload to Publish to Error Handler Queue"/>
+	</sub-flow>
+</mule>

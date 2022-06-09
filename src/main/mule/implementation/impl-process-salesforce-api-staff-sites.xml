@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="impl-process-salesforce-api:staff:sub_flow" doc:id="cfb7bcd1-d2f8-4e72-a132-6390e674f397" >
+		<logger level="INFO" doc:name="Log Start Staff Implementation Flow" doc:id="a518d2d2-a592-4b0c-9804-5888fa4647a7" message="Start Staff Implementation Flow"/>
+		<ee:transform doc:name="Set requestedSourceSystems, httpQueryParams, httpHeaders and httpUriPath" doc:id="94ee82cb-ce9e-485d-8d3c-89b4dc891aa4" >
+			<ee:message />
+			<ee:variables >
+				<ee:set-variable variableName="httpQueryParams" ><![CDATA[%dw 2.0
+output application/java
+import p from Mule
+var lastUpdatedOn= attributes.queryParams.'last-updated-on'
+import getLastUpdatedDate from modules::getAllFunctions
+---
+{
+	"last-updated-on": getLastUpdatedDate(attributes.queryParams.'last-updated-on'),
+	"page":p('default.page'),
+	"limit":p('default.limit')
+}]]></ee:set-variable>
+				<ee:set-variable variableName="httpHeaders" ><![CDATA[%dw 2.0
+output application/java
+import p from Mule
+---
+{
+	'X-Source-Id': p('source.id'),
+	'Accept': p('default.api.accept.header')
+}]]></ee:set-variable>
+				<ee:set-variable variableName="requestedSourceSystems" ><![CDATA[p('default.requestedSourceSystem.idm')]]></ee:set-variable>
+				<ee:set-variable variableName="httpUriPath" ><![CDATA[p('idm.system.api.staff.path')]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="system-idm-api:get-idm-staff-api:sub_flow" doc:id="3b10fb8e-4abf-4752-8e24-b6e1924535e7" name="system-idm-api:get-idm-staff-api:sub_flow"/>
+		<logger level="INFO" doc:name="Log Payload Size" doc:id="1d3e39af-329c-42f1-accd-698e84613ecf" message='#[%dw 2.0&#10;output text/plain&#10;---&#10;"System = " ++ vars.requestedSourceSystems ++ " | No. of Staff Records =" ++ sizeOf(payload)]' />
+		<ee:transform doc:name="Transform to Salesforce Staff Contact Request" doc:id="8db586c0-243e-4d16-884b-6bcc7de4f735">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/csv
+---
+payload map (item, index) ->{
+	
+	employeeId: item.employeeId,
+	siteId: item.mainOrgUnitId,
+	salutation: item.salutation,
+	firstName: item.firstName,
+	lastName: item.lastName,
+	preferredName: item.preferredName,
+	gender: item.gender,
+	phone: item.workPhone replace (("\D" ) as Regex) with (""),
+	mobile: item.workMobile replace (("\D" ) as Regex) with (""),
+	workEmail: item.workEmail,	
+}]]></ee:set-payload>
+			</ee:message>
+			<ee:variables>
+				<ee:set-variable variableName="salesforceRequestHeaders"><![CDATA[%dw 2.0
+output application/json
+---
+{
+	'Content-Type':p('default.api.content.type')
+}]]></ee:set-variable>
+				<ee:set-variable variableName="httpUriPath" ><![CDATA[p('salesforce.system.api.staff.path')]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="system-salesforce-api:post-contacts:sub_flow" doc:id="082b6981-ebb8-4770-b800-9601f0928a02" name="system-salesforce-api:post-contacts:sub_flow"/>
+		<logger level="INFO" doc:name="Log End Staff Implementation Flow" doc:id="833af1ae-b557-4274-8a7c-8e1879d2484c" message="End Staff Implementation Flow"/>
+	</sub-flow>
+</mule>

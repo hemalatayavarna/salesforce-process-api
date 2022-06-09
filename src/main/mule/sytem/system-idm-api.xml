@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<sub-flow name="system-idm-api:get-idm-staff-api:sub_flow" doc:id="bcf70add-a883-47f2-8840-3393b795413f" >
+		<logger level="INFO" doc:name="Log Start IDM System API" doc:id="a9615ff6-e4f5-44e5-a0f1-4c0997776ccb" message="Start IDM System API"/>
+		<http:request method="GET" doc:name="Get IDM System API Data" doc:id="9ed93951-f426-4361-87ee-70db8fae7b30" config-ref="idm-db-system-api-httpRequesterConfig" path="#[vars.httpUriPath]">
+			<http:headers ><![CDATA[#[vars.httpHeaders]]]></http:headers>
+			<http:query-params ><![CDATA[#[vars.httpQueryParams]]]></http:query-params>
+		</http:request>
+		<logger level="INFO" doc:name="Log End IDM System API" doc:id="ffc197fd-697b-4310-87c6-8233e61c04e7" message="End IDM System API"/>
+	</sub-flow>
+</mule>

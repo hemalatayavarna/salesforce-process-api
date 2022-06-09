@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+	xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd 
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+	<http:request-config
+		name="ceds-db-system-api-httpRequesterConfig"
+		doc:name="HTTP Request configuration"
+		doc:id="a7b5b908-d3ad-4daf-9fe6-46e476aa194c"
+		basePath="${ceds.system.api.basepath}"
+		responseTimeout="${ceds.system.api.response.timeout}">
+		<http:request-connection
+			host="${ceds.system.api.host}" port="${ceds.system.api.port}"
+			maxConnections="${ceds.system.api.maxconnections}"
+			connectionIdleTimeout="${ceds.system.api.timeout}"
+			responseBufferSize="${ceds.system.api.bufferSize}" protocol="${ceds.system.api.protocol}">
+			<reconnection >
+				<reconnect frequency="${ceds.system.reconnection.frequency}" count="${ceds.system.reconnection.attempts}" />
+			</reconnection>
+		</http:request-connection>
+	</http:request-config>
+	<http:request-config
+		name="eys-db-system-api-httpRequesterConfig"
+		doc:name="HTTP Request configuration"
+		doc:id="c34e6d18-ebe7-404c-8621-13923575e9fc"
+		basePath="${eys.system.api.basepath}"
+		responseTimeout="${eys.system.api.timeout}">
+		<http:request-connection
+			host="${eys.system.api.host}" port="${eys.system.api.port}"
+			maxConnections="${eys.system.api.maxconnections}"
+			connectionIdleTimeout="${eys.system.api.timeout}"
+			responseBufferSize="${eys.system.api.bufferSize}" protocol="${eys.system.api.protocol}">
+			<reconnection >
+				<reconnect frequency="${eys.system.reconnection.frequency}" count="${eys.system.reconnection.attempts}" />
+			</reconnection>
+		</http:request-connection>
+	</http:request-config>
+	<http:listener-config name="salesforce-process-api-httpListenerConfig">
+        <http:listener-connection host="${http.private.host}" port="${http.private.port}" readTimeout="${http.read.timeout}" connectionIdleTimeout="${http.connection.idle.timeout}"/>
+    </http:listener-config>
+    <apikit:config name="salesforce-process-api-config" api="salesforce-process-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+	<configuration-properties doc:name="Configuration properties" doc:id="19a5388e-1d71-40d5-ac77-b2aeb7ae0d47" file="config\app-config-global.properties" />
+	<configuration-properties doc:name="Configuration properties" doc:id="6ac7ee63-b3ec-4468-8159-0380825c9b0c" file="config\app-config-${env}.properties" />
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="a58a787e-ebb8-4c9a-8a44-55eb6ea8d221" file="config\app-config-${env}.properties" key="$(secure.key)" >
+		<secure-properties:encrypt algorithm="Blowfish" />
+	</secure-properties:config>
+	<jms:config name="JMS_Config" doc:name="JMS Config" doc:id="a941b597-8e35-4546-bd1b-d494384a85e5" >
+		<jms:generic-connection specification="JMS_2_0" username="${mq.broker.username}" password="${mq.broker.password}">
+			<jms:connection-factory >
+				<jms:jndi-connection-factory connectionFactoryJndiName="ConnectionFactory" >
+					<jms:name-resolver-builder jndiInitialContextFactory="org.apache.activemq.artemis.jndi.ActiveMQInitialContextFactory" jndiProviderUrl="${mq.broker.url}"/>
+				</jms:jndi-connection-factory>
+			</jms:connection-factory>
+		</jms:generic-connection>
+	</jms:config>
+	<http:request-config name="salesforce-system-api-httpRequestConfig" doc:name="HTTP Request configuration" doc:id="e18a3ca9-d906-4fb4-9cfe-b06ef5657f08" basePath="${salesforce.system.api.basepath}" responseTimeout="${salesforce.system.api.response.timeout}">
+		<http:request-connection host="${salesforce.system.api.host}" port="${salesforce.system.api.port}" connectionIdleTimeout="${salesforce.system.api.timeout}" protocol="${salesforce.system.api.protocol}" maxConnections="${salesforce.system.api.maxconnections}" responseBufferSize="${salesforce.system.api.bufferSize}"/>
+	</http:request-config>
+	<http:request-config name="ems-db-system-api-httpRequesterConfig" doc:name="HTTP Request configuration" doc:id="f3a315f5-d27a-45c0-b6af-c349b0005217" basePath="${ems.system.api.basepath}" >
+		<http:request-connection protocol="${ems.system.api.protocol}" host="${ems.system.api.host}" port="${ems.system.api.port}" maxConnections="${ems.system.api.maxconnections}" connectionIdleTimeout="${ems.system.api.timeout}" responseBufferSize="${ems.system.api.bufferSize}" >
+			<reconnection >
+				<reconnect frequency="${ems.system.reconnection.frequency}" count="${ems.system.reconnection.attempts}" />
+			</reconnection>
+		</http:request-connection>
+	</http:request-config>
+	<os:object-store name="Object_store" doc:name="Object store" doc:id="96287055-38fe-4bfa-a4cc-bfac2cf8c4ce" maxEntries="${object.max.entries}" entryTtl="${object.entry.ttl}" entryTtlUnit="MINUTES" expirationInterval="${object.expiration.interval}" />
+	<http:request-config name="idm-db-system-api-httpRequesterConfig" doc:name="HTTP Request configuration" doc:id="6c7d6fee-38d0-428f-a1f7-7c4e825a8416" basePath="${idm.system.api.basepath}" responseTimeout="${idm.system.api.response.timeout}">
+		<http:request-connection protocol="${idm.system.api.protocol}" host="${idm.system.api.host}" port="${idm.system.api.port}" maxConnections="${idm.system.api.maxconnections}" connectionIdleTimeout="${idm.system.api.timeout}" responseBufferSize="${idm.system.api.bufferSize}" >
+			<reconnection >
+				<reconnect-forever frequency="${idm.system.reconnection.frequency}" />
+			</reconnection>
+		</http:request-connection>
+	</http:request-config>
+	<http:request-config name="lss-db-system-api-httpRequesterConfig" doc:name="HTTP Request configuration" doc:id="37288e6f-4b3b-43c6-93c2-3a3342e30ebb" basePath="${lss.system.api.basepath}" responseTimeout="${lss.system.api.response.timeout}" >
+		<http:request-connection protocol="${lss.system.api.protocol}" host="${lss.system.api.host}" port="${lss.system.api.port}" maxConnections="${lss.system.api.maxconnections}" connectionIdleTimeout="${lss.system.api.timeout}" responseBufferSize="${lss.system.api.bufferSize}" >
+			<reconnection >
+				<reconnect frequency="${lss.system.reconnection.frequency}" count="${lss.system.reconnection.attempts}" />
+			</reconnection>
+		</http:request-connection>
+	</http:request-config>
+ 
+	</mule>

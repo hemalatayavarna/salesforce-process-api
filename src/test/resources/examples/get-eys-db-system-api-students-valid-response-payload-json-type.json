@@ -1,0 +1,33 @@
+[
+	{
+		"edId": "102615171N",
+		"siteId": "0102",
+		"lastName": "Smith",
+		"middleName": "Sam",
+		"firstName":"John",
+		"preferredName":"John",
+		"gender": "Male",
+		"birthDate": "1998-06-19",
+		"yearLevel": "Year 4",
+		"isDisable": false,
+		"cypc": false,
+		"iesFlag": false,
+		"birthCountry": "Australia"
+		
+    },
+    {
+        "edId": "109377369N",
+        "siteId": "6624",
+        "lastName": "Drew",
+        "middleName": "Ken",
+        "firstName": "Hazel",
+        "preferredName": "Hazel",
+        "gender": "Female",
+        "birthDate": "2010-06-10",
+        "yearLevel": "Year 10",
+        "isDisable": true,
+        "cypc": false,
+        "iesFlag": false,
+        "birthCountry": "Australia"
+    }
+]

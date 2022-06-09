@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+	<sub-flow name="impl-process-salesforce-api-students-guardians:salesforce-process-integration:upsert-relationships-cache" doc:id="8aa21534-06ac-45c0-9ddb-099596f6a407" >
+		<logger level="INFO" doc:name="Log Start Transform Relationship Data" doc:id="0acea659-abc4-4205-945c-5f48def57fae" message="Start Transform Relationship Data" />
+		<ee:transform doc:name="Transform Relationship Data To JSON" doc:id="a8a79e5b-e367-4431-a4d8-a68eed4e6c3d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+import p from Mule
+---
+payload map(item,index) -> {
+	
+	edId:item.edId,
+	guardianId:item.guardianId,
+	relationshipId: item.edId ++ item.guardianId,
+	relationshipType:p('constant.relationship.type'),
+}]]></ee:set-payload>
+			</ee:message>
+			<ee:variables />
+		</ee:transform>
+		<logger level="INFO" doc:name="Log Start Store Relationship Data" doc:id="4ae291fe-8ccf-4686-8662-96e6044c3b3c" message="Start Store Relationship Data" />
+		<logger level="INFO" doc:name="Logger" doc:id="d8f7636f-9d24-4e72-9c12-0f9eea31124f" message='#[%dw 2.0&#10;output text/plain&#10;---&#10;"System Name = " ++ vars.sourceSystem ++ " | Count of Students-Guardians relationship Records =" ++ sizeOf(payload)]'/>
+		<os:store doc:name="Storing Relationship Data" doc:id="ba288adb-d971-484d-a5db-c5acf4849b7b" key="#[vars.sourceSystem]" objectStore="Object_store" />
+		<logger level="INFO" doc:name="Log End Store Relationship Data" doc:id="f72f192c-daab-4ca9-8fc7-198e7cb726f7" message="End Store Relationship Data" />
+	</sub-flow>
+	<sub-flow name="impl-process-salesforce-api-students-guardians-relationship:sub_flow" doc:id="c6ad0f18-6a8e-4ade-a690-a75252da1866" >
+		<logger level="INFO" doc:name="Log Start Retrieve Relationships Data" doc:id="73bf9ef5-6c64-4008-b693-3dceefd09042" message="Start Retrieve Relationships Data" />
+		<os:retrieve-all doc:name="Retrieve all Relationship Data" doc:id="2b486ae1-7b73-4465-a931-ced2fe9805e8" objectStore="Object_store" />
+		<ee:transform doc:name="Read Stored Object" doc:id="cf1389f3-9ffa-4851-9b2b-a622020e8631" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload mapObject (value, key)->
+{
+	"$(key)" : read(value,'application/json')
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform Relationship Data to CSV , Set variables: httpUriPath, salesforceRequestHeaders" doc:id="f0eb718b-4ef2-42de-a22e-c0a1ad210912" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/csv
+var CEDS=payload.CEDS
+var EYS=payload.EYS
+var EMS=payload.EMS
+---
+	(CEDS ++ EYS ++ EMS)]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="salesforceRequestHeaders" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	'Content-Type':p('default.api.content.type')
+}]]></ee:set-variable>
+				<ee:set-variable variableName="httpUriPath" ><![CDATA[p('salesforce.system.api.relationships.path')]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Log Payload Size" doc:id="d24ff547-b988-430d-8602-ed6e80a8d509" message='#[" Count of Relationship Records = $(sizeOf(payload))"]' />
+		<flow-ref doc:name="system-salesforce-api:post-contacts:sub-flow" doc:id="0885b9e0-b3af-4be9-aae2-1f6972eaf85a" name="system-salesforce-api:post-contacts:sub_flow" />
+		<ee:transform doc:name="Response Paylaod" doc:id="1fd094ae-df28-492f-b5a4-555a8936036e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Log End Retrieve Relationships Data" doc:id="1cedf7d6-c354-405e-abc6-e6cb0f60bc8e" message="End Retrieve Relationships Data" />
+	</sub-flow>
+</mule>

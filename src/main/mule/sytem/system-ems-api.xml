@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="system-ems-api:get-ems-students-api:sub_flow" doc:id="3a3d51d6-5b91-4bc1-a25c-a4258f60ba3a" >
+		<logger level="INFO" doc:name="Log Start EMS System API" doc:id="1db2b85a-6e6d-43e2-b899-ffcf17dd68a0" message="Start EMS System API Flow"/>
+		<http:request method="GET" doc:name="Get EMS System API Data" doc:id="90d3a9fa-dbbb-4644-8712-c243d85d9d46" config-ref="ems-db-system-api-httpRequesterConfig" path="#[vars.httpUriPath]" sendCorrelationId="ALWAYS" correlationId="correlationId" responseTimeout="#[p('ems.system.api.response.timeout')]">
+			<http:headers ><![CDATA[#[vars.httpHeaders]]]></http:headers>
+			<http:query-params ><![CDATA[#[vars.httpQueryParams]]]></http:query-params>
+		</http:request>
+		<logger level="INFO" doc:name="Log End EMS System API" doc:id="857dfea3-c9ef-4803-adb4-fa6b046a7ec1" message="End EMS System API"/>
+		
+	</sub-flow>
+</mule>

@@ -1,0 +1,3 @@
+edId,siteId,lastName,middleName,firstName,preferredName,gender,birthDate,yearLevel,isDisable,cypc,iesFlag,hasCustodyOrder,hasInterventionOrder,birthCountry
+,0102,Smith,Sam,John,John,Male,1998-06-19,Year 4,false,false,false,Y,N,Australia
+109377369N,6624,Drew,Ken,Hazel,Hazel,Female,2010-06-10,Year 10,true,false,false,Y,N,Australia

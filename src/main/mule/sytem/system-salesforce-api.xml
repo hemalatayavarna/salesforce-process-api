@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="system-salesforce-api:post-contacts:sub_flow" doc:id="6ad29a42-a79d-421b-a750-9c402795ff87" >
+		<logger level="INFO" doc:name="Log Start Salesforce System API" doc:id="836c9550-7cf9-463f-a3f9-c63e94c95037" message='Start Salesforce System API'/>
+		<http:request method="POST" doc:name="Post Salesforce Data" doc:id="c7e6d800-7f30-4526-8c73-c7fe281e539d" config-ref="salesforce-system-api-httpRequestConfig" path="#[vars.httpUriPath]" sendCorrelationId="ALWAYS" correlationId="correlationId">
+			<http:headers ><![CDATA[#[vars.salesforceRequestHeaders]]]></http:headers>
+		</http:request>
+		<logger level="INFO" doc:name="Log End Salesforce System API" doc:id="a355e5c8-9c3b-4146-a5bc-7dacde98b891" message='End Salesforce System API'/>
+	</sub-flow>
+</mule>

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<sub-flow name="impl-salesforce-process-api:students-guardians:sub_flow" doc:id="96600f6c-9256-4a4b-a680-605471c48325" >
+		<logger level="INFO" doc:name="Log Start Guardians Implementation Flow" doc:id="87219689-c796-4c16-bec9-21d06bd7c7f6" message='Start Guardians Implementation Flow' />
+		<ee:transform doc:name="Set requestedSourceSystems, httpQueryParams and httpHeaders" doc:id="b2039e2d-c437-4c30-a704-d0e1bc8e9d30" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="httpQueryParams" ><![CDATA[%dw 2.0
+output application/java
+import p from Mule
+var lastUpdatedOn= attributes.queryParams.'last-updated-on'
+import getLastUpdatedDate from modules::getAllFunctions
+---
+{
+	"last-updated-on": getLastUpdatedDate(attributes.queryParams.'last-updated-on'),
+	"page":p('default.page'),
+	"limit":p('default.limit')
+}]]></ee:set-variable>
+				<ee:set-variable variableName="httpHeaders" ><![CDATA[%dw 2.0
+output application/java
+import p from Mule
+---
+{
+	'X-Source-Id':p('source.id'),
+	'Accept': p('default.api.accept.header')
+}]]></ee:set-variable>
+				<ee:set-variable variableName="requestedSourceSystems" ><![CDATA[%dw 2.0
+output application/java
+---
+["CEDS","EMS","EYS"]]]></ee:set-variable>
+			
+</ee:variables>
+		</ee:transform>
+		<scatter-gather doc:name="Scatter-Gather" doc:id="7898b516-a554-4f5f-a5f4-e78e2faa2620" >
+			<route >
+				<flow-ref doc:name="impl-salesforce-process-api-students-guardians:ceds:sub_flow" doc:id="7182789f-c9e1-4c2a-beaf-3e7601b38a71" name="impl-salesforce-process-api-students-guardians:ceds:sub_flow" />
+			</route>
+			<route >
+				<flow-ref doc:name="impl-salesforce-process-api-students-guardians:eys:sub_flow" doc:id="f6bc572e-04d4-4540-9f90-b16f5a87d00a" name="impl-salesforce-process-api-students-guardians:eys:sub_flow" />
+			</route>
+			<route >
+				<flow-ref doc:name="impl-salesforce-process-api-students-guardians:ems:sub_flow" doc:id="093b4d8d-674e-4f6f-a8b6-9fbfde10b071" name="impl-salesforce-process-api-students-guardians:ems:sub_flow" />
+			</route>
+		</scatter-gather>
+		<logger level="INFO" doc:name="Log Scatter gather completed" doc:id="d5a05d4e-dc37-4c38-b08f-cb6a619837c2" message="Scatter gather completed"/>
+		<ee:transform doc:name="Response Payload" doc:id="ca0aafc8-af6d-463c-9d27-d09d8ed101e0" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload[2].payload[0].payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Log End Guardians Implementation Flow" doc:id="1039030c-2cdb-42ee-8566-244bc569ee37" message="End Guardians Implementation Flow" />
+	</sub-flow>
+	<sub-flow name="impl-salesforce-process-api-students-guardians:ceds:sub_flow" doc:id="03f2da09-e770-40e3-bf8c-48149f91e078" >
+		<logger level="INFO" doc:name="Log Start CEDS Guardians Flow" doc:id="75527cbd-a8c4-4d46-874f-ebc7d63cb72b" message='Start CEDS Guardians Flow' />
+		<ee:transform doc:name="Set Variable: sourceSystem, httpUriPath" doc:id="d4ef3964-05cb-47fd-8578-1432bab2a68d">
+				<ee:message>
+				</ee:message>
+				<ee:variables>
+				<ee:set-variable variableName="sourceSystem" ><![CDATA[p('source.system.ceds')]]></ee:set-variable>
+				<ee:set-variable variableName="httpUriPath" ><![CDATA[p('ceds.system.api.students.guardians.path')]]></ee:set-variable>
+				
+
+</ee:variables>
+			</ee:transform>
+		<choice doc:name="Check" doc:id="538c3b80-c6e6-4af9-b5d4-c793c752b056">
+				<when expression="#[vars.requestedSourceSystems contains p('source.system.ceds')]">
+					<logger level="INFO" doc:name="Log Start CEDS Guardians Flow" doc:id="d2092ba2-56d1-4f11-907c-f0fb962a69e2" message="Start CEDS Guardians Flow" />
+					<flow-ref doc:name="system-ceds-api:get-ceds-students-api:sub_flow" doc:id="ae5e4b9b-da9f-493f-b737-c7e7d6f18576" name="system-ceds-api:get-ceds-students-api:sub_flow"/>
+					<flow-ref doc:name="impl-salesforce-process-api-students-guardians:to-salesforce:sub_flow" doc:id="64e59573-5ca1-40a2-aabb-da5bb0abc7de" name="impl-salesforce-process-api-students-guardians:to-salesforce:sub_flow" />
+					<logger level="INFO" doc:name="Log End CEDS Guardians Flow" doc:id="df545b64-cc82-447c-b274-edc081bc422a" message="End CEDS Guardians Flow" />
+				
+</when>
+				<otherwise>
+					<logger level="DEBUG" doc:name="Log Choice Condition (DEBUG)" doc:id="2b23b539-a19b-40af-a25d-48235489f3bf" message="Salesforce Transaction Request doesnt need CEDS Data" />
+				</otherwise>
+			</choice>
+	</sub-flow>
+	<sub-flow name="impl-salesforce-process-api-students-guardians:eys:sub_flow" doc:id="e19cf162-30e4-41c4-ac77-0322a0e686e5" >
+		<logger level="INFO" doc:name="Log Start EYS Guardians Flow" doc:id="93499408-f062-429e-9b0a-cb91b604f737" message="Start EYS Guardians Flow" />
+		<ee:transform doc:name="Set Variable: sourceSystem, httpUriPath" doc:id="0c59ae94-dd78-4827-a7c0-72530e080671">
+				<ee:message>
+				</ee:message>
+				<ee:variables>
+				<ee:set-variable variableName="sourceSystem" ><![CDATA[p('source.system.eys')]]></ee:set-variable>
+				<ee:set-variable variableName="httpUriPath" ><![CDATA[p('eys.system.api.students.guardians.path')]]></ee:set-variable>
+				
+
+</ee:variables>
+			</ee:transform>
+		<choice doc:name="Check" doc:id="84f3bb5a-bfa2-4a96-9e79-00d6ec3a896e">
+				<when expression="#[vars.requestedSourceSystems contains p('source.system.eys')]">
+					<logger level="INFO" doc:name="Log Start EYS Guardians Flow" doc:id="14460520-97b9-495d-9906-0be26afb3652" message="Start EYS Guardians Flow" />
+					<flow-ref doc:name="system-eys-api:get-eys-students:sub_flow" doc:id="22fd21d7-4478-4f0e-80f3-04735504f604" name="system-eys-api:get-eys-students:sub_flow" />
+					<flow-ref doc:name="impl-salesforce-process-api-students-guardians:to-salesforce:sub_flow" doc:id="98aa144e-9e1d-46be-ab3e-3157ec93a0b4" name="impl-salesforce-process-api-students-guardians:to-salesforce:sub_flow" />
+					<logger level="INFO" doc:name="Log End EYS Guardians Flow" doc:id="3be5c35b-563c-4efa-bd32-753e22692a08" message="End EYS Guardians Flow" />
+				</when>
+				<otherwise>
+					<logger level="DEBUG" doc:name="Log Choice Condition (DEBUG)" doc:id="5592dab3-328d-4adc-bd1e-976cd329126d" message="Salesforce Transaction Request doesnt need EYS Data" />
+				</otherwise>
+			</choice>
+	</sub-flow>
+	<sub-flow name="impl-salesforce-process-api-students-guardians:ems:sub_flow" doc:id="eea175c1-df01-4a60-988e-0b77d8c86d89" >
+		<logger level="INFO" doc:name="Log Start EMS Guardians Flow" doc:id="8d5a791e-73b9-4147-9cd8-949f8382721f" message='Start EMS Guardians Flow' />
+		<ee:transform doc:name="Set Variable: sourceSystem, httpUriPath" doc:id="51bf9c8a-b0d1-43ee-8d65-46c9ac9a49f1">
+				<ee:message>
+				</ee:message>
+				<ee:variables>
+				<ee:set-variable variableName="httpUriPath" ><![CDATA[p('ems.system.api.students.guardians.path')]]></ee:set-variable>
+				<ee:set-variable variableName="sourceSystem" ><![CDATA[p('source.system.ems')]]></ee:set-variable>
+				
+</ee:variables>
+			</ee:transform>
+		<choice doc:name="Check" doc:id="f71057f6-ec59-47c3-8b4b-630b35a55b7c">
+				<when expression="#[vars.requestedSourceSystems contains p('source.system.ems')]">
+					<logger level="INFO" doc:name="Log Start EMS Guardians Flow" doc:id="48ecaff2-07a9-4590-b600-5eba5b12a823" message="Start EMS Guardians Flow" />
+					<flow-ref doc:name="system-ems-api:get-ems-students-api:sub_flow" doc:id="45a7f29c-e5eb-41ec-93fa-82aabfc71428" name="system-ems-api:get-ems-students-api:sub_flow" />
+					<flow-ref doc:name="impl-salesforce-process-api-students-guardians:to-salesforce:sub_flow" doc:id="c4bad79a-d953-4755-a510-d630a3017546" name="impl-salesforce-process-api-students-guardians:to-salesforce:sub_flow" />
+					<logger level="INFO" doc:name="Log End EMS Guardians Flow" doc:id="86d14c03-5342-45ac-ab8d-0e5317d7c2bd" message="End EMS Guardians Flow" />
+				</when>
+				<otherwise>
+					<logger level="DEBUG" doc:name="Log Choice Condition (DEBUG)" doc:id="3c147885-f921-4f24-9f26-779f2082f4af" message="Salesforce Transaction Request doesnt need EMS Data" />
+				</otherwise>
+			</choice>
+	</sub-flow>
+	<sub-flow name="impl-salesforce-process-api-students-guardians:to-salesforce:sub_flow" doc:id="8904c549-e026-4eee-898c-2ef96b51462c" >
+	<logger level="INFO" doc:name="Log Start Guardians Salesforce Flow" doc:id="9975049d-4dd0-41b5-ab73-2e516769d263" message="Start Guardians Salesforce Flow"/>
+		<ee:transform doc:name="Transform to Salesforce Guardians Contact Request" doc:id="c1788bdd-7dc6-4a3d-886d-8a7955681f3b">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/csv
+---
+payload filter($.edId != "")]]></ee:set-payload>
+			</ee:message>
+			<ee:variables>
+				<ee:set-variable variableName="salesforceRequestHeaders"><![CDATA[%dw 2.0
+output application/json
+---
+{
+	'Content-Type':p('default.api.content.type')
+}]]></ee:set-variable>
+				<ee:set-variable variableName="httpURIPath"><![CDATA[p('salesforce.system.api.guardians.path')]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Log Payload Size" doc:id="91246457-2594-42b1-80c7-3d0c9c3fda55" message='#[%dw 2.0&#10;output text/plain&#10;---&#10;"System Name = " ++ vars.sourceSystem ++ " | Count of Students-Guardians Records =" ++ sizeOf(payload)]' />
+		<scatter-gather doc:name="Scatter-Gather" doc:id="5818e91c-b4e0-4114-9ec5-3c5cb5cb04b7" >
+			<route >
+				<ee:transform doc:name="Filter Duplicate Guardians" doc:id="79f77404-208c-4a62-9258-2f06e9e98508">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/csv
+---
+payload distinctBy ($.guardianId) map(item,index)-> {
+	guardianId: item.guardianId,
+	guardianSalutation: item.guardianSalutation,
+	guardianFirstName: item.guardianFirstName,
+	guardianLastName:item.guardianLastName,
+	guardianPhone: item.guardianPhone,
+	guardianMobile: item.guardianMobile,
+	guardianEmail: item.guardianEmail
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Log Payload Size" doc:id="c266f922-6593-4e24-bd5d-4e7c6f1aada0" message='#[%dw 2.0&#10;output text/plain&#10;---&#10;"System Name = " ++ vars.sourceSystem ++ " | Count of Students-Guardians Records after filtering GuardianId =" ++ sizeOf(payload)]' />
+				<flow-ref doc:name="system-salesforce-api:post-contacts:sub_flow" doc:id="3c29594b-51ed-4cca-8322-b8ac491593a1" name="system-salesforce-api:post-contacts:sub_flow" />
+				<logger level="INFO" doc:name="Log End Guardians Salesforce Flow" doc:id="33acc0d7-984a-45ba-8024-d9f0fcfcdd2b" message="End Guardians Salesforce Flow" />
+			</route>
+			<route >
+				<flow-ref doc:name="impl-process-salesforce-api-students-guardians:salesforce-process-integration:upsert-relationships-cache" doc:id="4df78d4e-0358-4715-9c4a-bdd95da1f728" name="impl-process-salesforce-api-students-guardians:salesforce-process-integration:upsert-relationships-cache"/>
+			</route>
+		</scatter-gather>
+	</sub-flow>
+</mule>

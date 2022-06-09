@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="impl-process-salesforce-sites:subflow" doc:id="d85cba63-99d9-4ee4-87b2-41d95c302830" >
+		<logger level="INFO" doc:name="Log Start Sites Implementation Flow" doc:id="17d9f7e4-6fad-43c5-bbc4-6721619a8dd9" message="Start SItes Implementation Flow"/>
+		<ee:transform doc:name="Set requestedSourceSystems, httpQueryParams, httpHeaders and httpUriPath" doc:id="fd58cda4-66d1-4d33-9a22-ef259335793a">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable variableName="httpQueryParams"><![CDATA[%dw 2.0
+output application/java
+import p from Mule
+var fromDate= attributes.queryParams.'fromDate'
+var toDate= attributes.queryParams.'toDate'
+import getFromDate from modules::getAllFunctions
+import getToDate from modules::getAllFunctions
+---
+{
+	"fromDate": getFromDate(attributes.queryParams.'fromDate'),
+	"toDate": getToDate(attributes.queryParams.'toDate'),
+	"page":p('default.page'),
+	"limit":p('default.limit')
+}]]></ee:set-variable>
+				<ee:set-variable variableName="httpHeaders"><![CDATA[%dw 2.0
+output application/java
+import p from Mule
+---
+{
+	'X-Source-Id': p('source.id'),
+	'Accept': p('default.api.accept.header')
+}]]></ee:set-variable>
+				<ee:set-variable variableName="requestedSourceSystems"><![CDATA[p('default.requestedSourceSystem.lss')]]></ee:set-variable>
+				<ee:set-variable variableName="httpUriPath"><![CDATA[p('lss.system.api.sites.path')]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="system-lss-api:get-lss-sites:subflow" doc:id="74cebe03-b99e-45a8-bdfa-fb2f77110b83" name="system-lss-api:get-lss-sites:subflow"/>
+		<ee:transform doc:name="Transform to Salesforce Sites Account Request" doc:id="13a8bdc0-5912-485e-aee0-fa5bcbce1f3f">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/csv
+import p from Mule
+---
+payload map ( item , index ) -> {
+	accountName: item.accountName,
+	accountType: item.accountType,
+	accountSubType: item.accountSubType,
+	accountId: item.siteId,
+	govType: item.govType,
+	portfolio: item.portfolio,
+	schoolPartnership: item.schoolPartnership,
+	accountWebsite: item.accountWebsite,
+	accountPhone: item.accountPhone  replace (("\D" ) as Regex) with (""),
+	accountBillingStreet: item.accountStreet,
+	accountBillingState: item.accountState,
+	accountBillingCity: item.accountCity,
+	accountBillingCountry: p('default.account.country'),
+	accountBillingPostCode: item.accountPostCode,
+	accountBillingEmail: item.accountEmail,
+	accountShippingStreet: item.accountStreet,
+	accountShippingState: item.accountState,
+	accountShippingCity: item.accountCity,
+	accountShippingCountry: p('default.account.country'),
+	accountShippingPostCode: item.accountPostCode,
+	accountSector: item.sector
+}]]></ee:set-payload>
+			</ee:message>
+			<ee:variables>
+				<ee:set-variable variableName="salesforceRequestHeaders"><![CDATA[%dw 2.0
+output application/json
+---
+{
+	'Content-Type':p('default.api.content.type')
+}]]></ee:set-variable>
+				<ee:set-variable variableName="httpUriPath"><![CDATA[p('salesforce.system.api.accounts.path')]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="system-salesforce-api:post-contacts:sub_flow" doc:id="f146e068-5ed7-4c09-a18a-c4c4f339c54a" name="system-salesforce-api:post-contacts:sub_flow"/>
+		<logger level="INFO" doc:name="Log End Sites Implementation Flow" doc:id="c16388eb-f5a2-4741-b7d8-c624cf68da5e" message="Start Sites Implementation Flow"/>
+	</sub-flow>
+</mule>

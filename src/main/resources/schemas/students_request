@@ -1,0 +1,388 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "http://example.com/example.json",
+    "type": "array",
+    "title": "The root schema",
+    "description": "The root schema comprises the entire JSON document.",
+    "default": [],
+    "examples": [
+        [
+            {
+                "edid": "107934877F",
+                "title": "Student",
+                "lastName": "TRIEU",
+                "firstName": "JORDAN",
+                "middleName": "JORDAN",
+                "gender": "M",
+                "birthDate": "2/12/2012",
+                "yearLevel": 7,
+                "isDisable": "N",
+                "siteId": "0570",
+                "cypc": "N",
+                "iesFlag": "N",
+                "guardian1Salutation": "MR",
+                "guardian1LastName": "TRIEU",
+                "guardian1FirstName": "LOC",
+                "guardian1Phone": 882806666,
+                "guardian1Mobile": "0435947349",
+                "guardian1Email": "monster_monkey08@hotmail.com",
+                "guardian2Salutation": "MRS",
+                "guardian2LastName": "TRAN",
+                "guardian2FirstName": "NGOC DUNG",
+                "guardian2Phone": 12116513,
+                "guardian2Mobile": 22155,
+                "guardian2Email": "monster_monkey08@hotmail.com",
+                "status": "A"
+            },
+            {
+                "edid": "107934877D",
+                "title": "Student",
+                "lastName": "KAPE",
+                "firstName": "JORDAN",
+                "middleName": "FLAN",
+                "gender": "F",
+                "birthDate": "2/12/2015",
+                "yearLevel": 3,
+                "isDisable": "N",
+                "siteId": "0570",
+                "cypc": "N",
+                "iesFlag": "N",
+                "guardian1Salutation": "MR",
+                "guardian1LastName": "DRAKE",
+                "guardian1FirstName": "KAPE",
+                "guardian1Phone": 882806346,
+                "guardian1Mobile": "0435947555",
+                "guardian1Email": "monster_monkey09@hotmail.com",
+                "guardian2Salutation": "MRS",
+                "guardian2LastName": "KAPE",
+                "guardian2FirstName": "FLAN",
+                "guardian2Phone": 12116513,
+                "guardian2Mobile": 22155,
+                "guardian2Email": "monster_monkey08@hotmail.com",
+                "status": "A"
+            }
+        ]
+    ],
+    "additionalItems": true,
+    "items": {
+        "$id": "#/items",
+        "anyOf": [
+            {
+                "$id": "#/items/anyOf/0",
+                "type": "object",
+                "title": "The first anyOf schema",
+                "description": "An explanation about the purpose of this instance.",
+                "default": {},
+                "examples": [
+                    {
+                        "edid": "107934877F",
+                        "title": "Student",
+                        "lastName": "TRIEU",
+                        "firstName": "JORDAN",
+                        "middleName": "JORDAN",
+                        "gender": "M",
+                        "birthDate": "2/12/2012",
+                        "yearLevel": 7,
+                        "isDisable": "N",
+                        "siteId": "0570",
+                        "cypc": "N",
+                        "iesFlag": "N",
+                        "guardian1Salutation": "MR",
+                        "guardian1LastName": "TRIEU",
+                        "guardian1FirstName": "LOC",
+                        "guardian1Phone": 882806666,
+                        "guardian1Mobile": "0435947349",
+                        "guardian1Email": "monster_monkey08@hotmail.com",
+                        "guardian2Salutation": "MRS",
+                        "guardian2LastName": "TRAN",
+                        "guardian2FirstName": "NGOC DUNG",
+                        "guardian2Phone": 12116513,
+                        "guardian2Mobile": 22155,
+                        "guardian2Email": "monster_monkey08@hotmail.com",
+                        "status": "A"
+                    }
+                ],
+                "required": [
+                    "edid",
+                    "title",
+                    "lastName",
+                    "firstName",
+                    "middleName",
+                    "gender",
+                    "birthDate",
+                    "yearLevel",
+                    "isDisable",
+                    "siteId",
+                    "cypc",
+                    "iesFlag",
+                    "guardian1Salutation",
+                    "guardian1LastName",
+                    "guardian1FirstName",
+                    "guardian1Phone",
+                    "guardian1Mobile",
+                    "guardian1Email",
+                    "guardian2Salutation",
+                    "guardian2LastName",
+                    "guardian2FirstName",
+                    "guardian2Phone",
+                    "guardian2Mobile",
+                    "guardian2Email",
+                    "status"
+                ],
+                "properties": {
+                    "edid": {
+                        "$id": "#/items/anyOf/0/properties/edid",
+                        "type": "string",
+                        "title": "The edid schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": "",
+                        "examples": [
+                            "107934877F"
+                        ]
+                    },
+                    "title": {
+                        "$id": "#/items/anyOf/0/properties/title",
+                        "type": "string",
+                        "title": "The title schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": "",
+                        "examples": [
+                            "Student"
+                        ]
+                    },
+                    "lastName": {
+                        "$id": "#/items/anyOf/0/properties/lastName",
+                        "type": "string",
+                        "title": "The lastName schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": "",
+                        "examples": [
+                            "TRIEU"
+                        ]
+                    },
+                    "firstName": {
+                        "$id": "#/items/anyOf/0/properties/firstName",
+                        "type": "string",
+                        "title": "The firstName schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": "",
+                        "examples": [
+                            "JORDAN"
+                        ]
+                    },
+                    "middleName": {
+                        "$id": "#/items/anyOf/0/properties/middleName",
+                        "type": "string",
+                        "title": "The middleName schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": "",
+                        "examples": [
+                            "JORDAN"
+                        ]
+                    },
+                    "gender": {
+                        "$id": "#/items/anyOf/0/properties/gender",
+                        "type": "string",
+                        "title": "The gender schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": "",
+                        "examples": [
+                            "M"
+                        ]
+                    },
+                    "birthDate": {
+                        "$id": "#/items/anyOf/0/properties/birthDate",
+                        "type": "string",
+                        "title": "The birthDate schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": "",
+                        "examples": [
+                            "2/12/2012"
+                        ]
+                    },
+                    "yearLevel": {
+                        "$id": "#/items/anyOf/0/properties/yearLevel",
+                        "type": "integer",
+                        "title": "The yearLevel schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": 0,
+                        "examples": [
+                            7
+                        ]
+                    },
+                    "isDisable": {
+                        "$id": "#/items/anyOf/0/properties/isDisable",
+                        "type": "string",
+                        "title": "The isDisable schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": "",
+                        "examples": [
+                            "N"
+                        ]
+                    },
+                    "siteId": {
+                        "$id": "#/items/anyOf/0/properties/siteId",
+                        "type": "string",
+                        "title": "The siteId schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": "",
+                        "examples": [
+                            "0570"
+                        ]
+                    },
+                    "cypc": {
+                        "$id": "#/items/anyOf/0/properties/cypc",
+                        "type": "string",
+                        "title": "The cypc schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": "",
+                        "examples": [
+                            "N"
+                        ]
+                    },
+                    "iesFlag": {
+                        "$id": "#/items/anyOf/0/properties/iesFlag",
+                        "type": "string",
+                        "title": "The iesFlag schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": "",
+                        "examples": [
+                            "N"
+                        ]
+                    },
+                    "guardian1Salutation": {
+                        "$id": "#/items/anyOf/0/properties/guardian1Salutation",
+                        "type": "string",
+                        "title": "The guardian1Salutation schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": "",
+                        "examples": [
+                            "MR"
+                        ]
+                    },
+                    "guardian1LastName": {
+                        "$id": "#/items/anyOf/0/properties/guardian1LastName",
+                        "type": "string",
+                        "title": "The guardian1LastName schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": "",
+                        "examples": [
+                            "TRIEU"
+                        ]
+                    },
+                    "guardian1FirstName": {
+                        "$id": "#/items/anyOf/0/properties/guardian1FirstName",
+                        "type": "string",
+                        "title": "The guardian1FirstName schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": "",
+                        "examples": [
+                            "LOC"
+                        ]
+                    },
+                    "guardian1Phone": {
+                        "$id": "#/items/anyOf/0/properties/guardian1Phone",
+                        "type": "integer",
+                        "title": "The guardian1Phone schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": 0,
+                        "examples": [
+                            882806666
+                        ]
+                    },
+                    "guardian1Mobile": {
+                        "$id": "#/items/anyOf/0/properties/guardian1Mobile",
+                        "type": "string",
+                        "title": "The guardian1Mobile schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": "",
+                        "examples": [
+                            "0435947349"
+                        ]
+                    },
+                    "guardian1Email": {
+                        "$id": "#/items/anyOf/0/properties/guardian1Email",
+                        "type": "string",
+                        "title": "The guardian1Email schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": "",
+                        "examples": [
+                            "monster_monkey08@hotmail.com"
+                        ]
+                    },
+                    "guardian2Salutation": {
+                        "$id": "#/items/anyOf/0/properties/guardian2Salutation",
+                        "type": "string",
+                        "title": "The guardian2Salutation schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": "",
+                        "examples": [
+                            "MRS"
+                        ]
+                    },
+                    "guardian2LastName": {
+                        "$id": "#/items/anyOf/0/properties/guardian2LastName",
+                        "type": "string",
+                        "title": "The guardian2LastName schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": "",
+                        "examples": [
+                            "TRAN"
+                        ]
+                    },
+                    "guardian2FirstName": {
+                        "$id": "#/items/anyOf/0/properties/guardian2FirstName",
+                        "type": "string",
+                        "title": "The guardian2FirstName schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": "",
+                        "examples": [
+                            "NGOC DUNG"
+                        ]
+                    },
+                    "guardian2Phone": {
+                        "$id": "#/items/anyOf/0/properties/guardian2Phone",
+                        "type": "integer",
+                        "title": "The guardian2Phone schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": 0,
+                        "examples": [
+                            12116513
+                        ]
+                    },
+                    "guardian2Mobile": {
+                        "$id": "#/items/anyOf/0/properties/guardian2Mobile",
+                        "type": "integer",
+                        "title": "The guardian2Mobile schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": 0,
+                        "examples": [
+                            22155
+                        ]
+                    },
+                    "guardian2Email": {
+                        "$id": "#/items/anyOf/0/properties/guardian2Email",
+                        "type": "string",
+                        "title": "The guardian2Email schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": "",
+                        "examples": [
+                            "monster_monkey08@hotmail.com"
+                        ]
+                    },
+                    "status": {
+                        "$id": "#/items/anyOf/0/properties/status",
+                        "type": "string",
+                        "title": "The status schema",
+                        "description": "An explanation about the purpose of this instance.",
+                        "default": "",
+                        "examples": [
+                            "A"
+                        ]
+                    }
+                },
+                "additionalProperties": true
+            }
+        ]
+    }
+}

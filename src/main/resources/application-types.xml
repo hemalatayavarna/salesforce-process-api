@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="student_ceds_input_data" format="json">
+      <types:shape format="weave" example="examples/student_ceds_mapping_input.json"><![CDATA[%dw 2.0
+
+type student_ceds_input_data = Array<{|  edid: String,   title: String,   lastName: String,   firstName: String,   middleName: String,   gender: String,   birthDate: String,   yearLevel: String,   isDisable: String,   siteId: String,   cypc: String,   iesFlag: String,   guardian1Salutation: String,   guardian1LastName: String,   guardian1FirstName: String,   guardian2Salutation: String,   guardian2LastName: String,   guardian2FirstName: String,   guardian2Mobile: String,   status: String,   guardian1Phone: String,   guardian1Mobile: String,   guardian1Email: String,   guardian2Phone: String,   guardian2Email: String|}> {"example": "[{\\\"edid\\\":\\\"104104090J\\\",\\\"title\\\":\\\"Student\\\",\\\"lastName\\\":\\\"HILL\\\",\\\"firstName\\\":\\\"DECLAN\\\",\\\"middleName\\\":\\\"DECLAN JAMES\\\",\\\"gender\\\":\\\"M\\\",\\\"birthDate\\\":\\\"2003-04-16\\\",\\\"yearLevel\\\":\\\"11\\\",\\\"isDisable\\\":\\\"N\\\",\\\"siteId\\\":\\\"1012\\\",\\\"cypc\\\":\\\"N\\\",\\\"iesFlag\\\":\\\"N\\\",\\\"guardian1Salutation\\\":\\\"MR\\\",\\\"guardian1LastName\\\":\\\"HILL\\\",\\\"guardian1FirstName\\\":\\\"DECLAN\\\",\\\"guardian2Salutation\\\":\\\"MRS\\\",\\\"guardian2LastName\\\":\\\"HILL\\\",\\\"guardian2FirstName\\\":\\\"ALEXANDRIA\\\",\\\"guardian2Mobile\\\":\\\"0405541851\\\",\\\"status\\\":\\\"A\\\"},{\\\"edid\\\":\\\"105672017F\\\",\\\"title\\\":\\\"Student\\\",\\\"lastName\\\":\\\"CHEESMAN\\\",\\\"firstName\\\":\\\"DYLAN\\\",\\\"middleName\\\":\\\"DYLAN  JACK\\\",\\\"gender\\\":\\\"M\\\",\\\"birthDate\\\":\\\"2008-07-30\\\",\\\"yearLevel\\\":\\\"07\\\",\\\"isDisable\\\":\\\"N\\\",\\\"siteId\\\":\\\"1673\\\",\\\"cypc\\\":\\\"N\\\",\\\"iesFlag\\\":\\\"N\\\",\\\"guardian1Salutation\\\":\\\"MS\\\",\\\"guardian1LastName\\\":\\\"GRINDLE\\\",\\\"guardian1FirstName\\\":\\\"MICHELLE\\\",\\\"guardian1Phone\\\":\\\"0881685700\\\",\\\"guardian1Mobile\\\":\\\"0439681251\\\",\\\"guardian1Email\\\":\\\"mlgrindle@hotmail.com\\\",\\\"guardian2Salutation\\\":\\\"MR\\\",\\\"guardian2LastName\\\":\\\"CHEESMAN\\\",\\\"guardian2FirstName\\\":\\\"TY\\\",\\\"guardian2Phone\\\":\\\"0882760276\\\",\\\"guardian2Mobile\\\":\\\"0410492163\\\",\\\"guardian2Email\\\":\\\"tycheesman@gmail.com\\\",\\\"status\\\":\\\"F\\\"},{\\\"edid\\\":\\\"104195179M\\\",\\\"title\\\":\\\"Student\\\",\\\"lastName\\\":\\\"BENNIE\\\",\\\"firstName\\\":\\\"SHANNON\\\",\\\"middleName\\\":\\\"SHANNON NEIL\\\",\\\"gender\\\":\\\"M\\\",\\\"birthDate\\\":\\\"2004-10-22\\\",\\\"yearLevel\\\":\\\"11\\\",\\\"isDisable\\\":\\\"N\\\",\\\"siteId\\\":\\\"1012\\\",\\\"cypc\\\":\\\"N\\\",\\\"iesFlag\\\":\\\"N\\\",\\\"guardian1Salutation\\\":\\\"MRS\\\",\\\"guardian1LastName\\\":\\\"VAN RENS\\\",\\\"guardian1FirstName\\\":\\\"JACOBA WILHELMINA MARIA\\\",\\\"guardian1Mobile\\\":\\\"0403155948\\\",\\\"guardian1Email\\\":\\\"shannonbennie2004@gmail.com\\\",\\\"status\\\":\\\"A\\\"},{\\\"edid\\\":\\\"108528302X\\\",\\\"title\\\":\\\"Student\\\",\\\"lastName\\\":\\\"OSING\\\",\\\"firstName\\\":\\\"KATRINA\\\",\\\"middleName\\\":\\\"KATRINA MAE\\\",\\\"gender\\\":\\\"F\\\",\\\"birthDate\\\":\\\"2005-05-08\\\",\\\"yearLevel\\\":\\\"12\\\",\\\"isDisable\\\":\\\"N\\\",\\\"siteId\\\":\\\"0976\\\",\\\"cypc\\\":\\\"N\\\",\\\"iesFlag\\\":\\\"Y\\\",\\\"guardian1Salutation\\\":\\\"MR\\\",\\\"guardian1LastName\\\":\\\"OSING\\\",\\\"guardian1FirstName\\\":\\\"MANOLITO\\\",\\\"guardian1Mobile\\\":\\\"0476064110\\\",\\\"guardian1Email\\\":\\\"manolito.osing@gmail.com\\\",\\\"guardian2Salutation\\\":\\\"MRS\\\",\\\"guardian2LastName\\\":\\\"OSING\\\",\\\"guardian2FirstName\\\":\\\"EDNA\\\",\\\"guardian2Email\\\":\\\"manolito.osing@gmail.com\\\",\\\"status\\\":\\\"A\\\"},{\\\"edid\\\":\\\"108090465A\\\",\\\"title\\\":\\\"Student\\\",\\\"lastName\\\":\\\"LUO\\\",\\\"firstName\\\":\\\"JACK\\\",\\\"middleName\\\":\\\"ZI QIAO\\\",\\\"gender\\\":\\\"M\\\",\\\"birthDate\\\":\\\"2012-05-23\\\",\\\"yearLevel\\\":\\\"04\\\",\\\"isDisable\\\":\\\"N\\\",\\\"siteId\\\":\\\"0923\\\",\\\"cypc\\\":\\\"N\\\",\\\"iesFlag\\\":\\\"N\\\",\\\"guardian1Salutation\\\":\\\"MS\\\",\\\"guardian1LastName\\\":\\\"XIONG\\\",\\\"guardian1FirstName\\\":\\\"YI MIN\\\",\\\"guardian1Mobile\\\":\\\"0405391888\\\",\\\"guardian1Email\\\":\\\"16021165@qq.com\\\",\\\"guardian2Salutation\\\":\\\"MR\\\",\\\"guardian2LastName\\\":\\\"WANG\\\",\\\"guardian2FirstName\\\":\\\"CHI\\\",\\\"guardian2Phone\\\":\\\"0884316606\\\",\\\"guardian2Email\\\":\\\"yiminxiong123@outlook.com\\\",\\\"status\\\":\\\"A\\\"},{\\\"edid\\\":\\\"108324680J\\\",\\\"title\\\":\\\"Student\\\",\\\"lastName\\\":\\\"PAUL\\\",\\\"firstName\\\":\\\"LIAM\\\",\\\"middleName\\\":\\\"LIAM\\\",\\\"gender\\\":\\\"M\\\",\\\"birthDate\\\":\\\"2014-12-30\\\",\\\"yearLevel\\\":\\\"02\\\",\\\"isDisable\\\":\\\"Y\\\",\\\"siteId\\\":\\\"1047\\\",\\\"cypc\\\":\\\"N\\\",\\\"iesFlag\\\":\\\"N\\\",\\\"guardian1Salutation\\\":\\\"MRS\\\",\\\"guardian1LastName\\\":\\\"MANUVELIPARAMBIL JOSEPH\\\",\\\"guardian1FirstName\\\":\\\"SHILPA JEAN\\\",\\\"guardian1Mobile\\\":\\\"0478916114\\\",\\\"guardian1Email\\\":\\\"shlpjean48@gmail.com\\\",\\\"guardian2Salutation\\\":\\\"MR\\\",\\\"guardian2LastName\\\":\\\"VARGHESE\\\",\\\"guardian2FirstName\\\":\\\"PAUL\\\",\\\"guardian2Mobile\\\":\\\"0478916113\\\",\\\"guardian2Email\\\":\\\"paulnursing@gmail.com\\\",\\\"status\\\":\\\"A\\\"},{\\\"edid\\\":\\\"107178999M\\\",\\\"title\\\":\\\"Student\\\",\\\"lastName\\\":\\\"MENZEL\\\",\\\"firstName\\\":\\\"TYSON\\\",\\\"middleName\\\":\\\"TYSON JEFFREY\\\",\\\"gender\\\":\\\"M\\\",\\\"birthDate\\\":\\\"2012-04-24\\\",\\\"yearLevel\\\":\\\"04\\\",\\\"isDisable\\\":\\\"N\\\",\\\"siteId\\\":\\\"0160\\\",\\\"cypc\\\":\\\"N\\\",\\\"iesFlag\\\":\\\"N\\\",\\\"guardian1Salutation\\\":\\\"MR\\\",\\\"guardian1LastName\\\":\\\"MENZEL\\\",\\\"guardian1FirstName\\\":\\\"SCOTT \\\",\\\"guardian1Mobile\\\":\\\"0417886977\\\",\\\"guardian2Salutation\\\":\\\"MRS\\\",\\\"guardian2LastName\\\":\\\"MENZEL\\\",\\\"guardian2FirstName\\\":\\\"PAULA \\\",\\\"guardian2Mobile\\\":\\\"0428239087\\\",\\\"guardian2Email\\\":\\\"menzfam@hotmail.com\\\",\\\"status\\\":\\\"A\\\"},{\\\"edid\\\":\\\"108149941N\\\",\\\"title\\\":\\\"Student\\\",\\\"lastName\\\":\\\"LEMUS RODRIGUEZ\\\",\\\"firstName\\\":\\\"JONATHAN\\\",\\\"middleName\\\":\\\"JONATHAN ESAU\\\",\\\"gender\\\":\\\"M\\\",\\\"birthDate\\\":\\\"2009-04-23\\\",\\\"yearLevel\\\":\\\"08\\\",\\\"isDisable\\\":\\\"N\\\",\\\"siteId\\\":\\\"0892\\\",\\\"cypc\\\":\\\"N\\\",\\\"iesFlag\\\":\\\"N\\\",\\\"guardian1Salutation\\\":\\\"MRS\\\",\\\"guardian1LastName\\\":\\\"DIAZ\\\",\\\"guardian1FirstName\\\":\\\"SONIA\\\",\\\"guardian1Mobile\\\":\\\"0402495392\\\",\\\"guardian1Email\\\":\\\"sonia-1985D@hotmail.com\\\",\\\"guardian2Salutation\\\":\\\"MR\\\",\\\"guardian2LastName\\\":\\\"LEMUS QUINTEROS\\\",\\\"guardian2FirstName\\\":\\\"JOSE SAMUEL\\\",\\\"guardian2Mobile\\\":\\\"0421994456\\\",\\\"status\\\":\\\"F\\\"},{\\\"edid\\\":\\\"105030383K\\\",\\\"title\\\":\\\"Student\\\",\\\"lastName\\\":\\\"KADIC\\\",\\\"firstName\\\":\\\"JASMINA\\\",\\\"middleName\\\":\\\"JASMINA\\\",\\\"gender\\\":\\\"F\\\",\\\"birthDate\\\":\\\"2008-01-13\\\",\\\"yearLevel\\\":\\\"09\\\",\\\"isDisable\\\":\\\"Y\\\",\\\"siteId\\\":\\\"1137\\\",\\\"cypc\\\":\\\"N\\\",\\\"iesFlag\\\":\\\"N\\\",\\\"guardian1Salutation\\\":\\\"MRS\\\",\\\"guardian1LastName\\\":\\\"KADIC\\\",\\\"guardian1FirstName\\\":\\\"SHANNON LEE\\\",\\\"guardian1Phone\\\":\\\"0884447613\\\",\\\"guardian1Mobile\\\":\\\"0450378407\\\",\\\"guardian1Email\\\":\\\"shannon_kadic@baiada.com.au\\\",\\\"guardian2Salutation\\\":\\\"MR\\\",\\\"guardian2LastName\\\":\\\"KADIC\\\",\\\"guardian2FirstName\\\":\\\"FARIS\\\",\\\"guardian2Mobile\\\":\\\"0488166286\\\",\\\"guardian2Email\\\":\\\"shannon_kadic@baiada.com.au\\\",\\\"status\\\":\\\"A\\\"}]"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="salesforce_ceds_output_data" format="json">
+      <types:shape format="weave" example="examples/salesforce_fields_mapping_output_ceds.json"><![CDATA[%dw 2.0
+
+type salesforce_ceds_output_data = Array<{|  EDID__c: String,   Title: String,   Site_ID__c: String,   LastName: String,   FirstName: String,   MiddleName: String,   hed__Gender__c: String,   Birthdate: String,   Year_Level__c: String,   CI_Disability__c: Boolean,   CI_CYPC__c: Boolean,   IES_Flag__c: Boolean,   CI_Guardian_1_Salutation__c: String,   CI_Guardian_1_Last_Name__c: String,   CI_Guardian_1_First_Name__c: String,   CI_Guardian_1_Phone__c: String,   CI_Guardian_1_Mobile__c: String,   CI_Guardian_1_Email__c: String,   CI_Guardian_2_Salutation__c: String,   CI_Guardian_2_Last_Name__c: String,   CI_Guardian_2_First_Name__c: String,   CI_Guardian_2_Phone__c: String,   CI_Guardian_2_Mobile__c: String,   CI_Guardian_2_Email__c: String|}> {"example": "[{\\\"EDID__c\\\":\\\"102615171N\\\",\\\"Title\\\":\\\"Studnet\\\",\\\"Site_ID__c\\\":\\\"0102\\\",\\\"LastName\\\":\\\"IRON\\\",\\\"FirstName\\\":\\\"MAN\\\",\\\"MiddleName\\\":\\\"peter\\\",\\\"hed__Gender__c\\\":\\\"Male\\\",\\\"Birthdate\\\":\\\"2016-06-19\\\",\\\"Year_Level__c\\\":\\\"Preschool\\\",\\\"CI_Disability__c\\\":true,\\\"CI_CYPC__c\\\":false,\\\"IES_Flag__c\\\":true,\\\"CI_Guardian_1_Salutation__c\\\":\\\"MS\\\",\\\"CI_Guardian_1_Last_Name__c\\\":\\\"SMITH\\\",\\\"CI_Guardian_1_First_Name__c\\\":\\\"MARIA\\\",\\\"CI_Guardian_1_Phone__c\\\":\\\"82095963\\\",\\\"CI_Guardian_1_Mobile__c\\\":\\\"0415555333\\\",\\\"CI_Guardian_1_Email__c\\\":\\\"maria.smith@gmail.com\\\",\\\"CI_Guardian_2_Salutation__c\\\":\\\"MR\\\",\\\"CI_Guardian_2_Last_Name__c\\\":\\\"SMITH\\\",\\\"CI_Guardian_2_First_Name__c\\\":\\\"Paul\\\",\\\"CI_Guardian_2_Phone__c\\\":\\\"82095555\\\",\\\"CI_Guardian_2_Mobile__c\\\":\\\"046652365\\\",\\\"CI_Guardian_2_Email__c\\\":\\\"paul.smith@gmail.com\\\"},{\\\"EDID__c\\\":\\\"102615171N\\\",\\\"Title\\\":\\\"Studnet\\\",\\\"Site_ID__c\\\":\\\"0102\\\",\\\"LastName\\\":\\\"IRON\\\",\\\"FirstName\\\":\\\"MAN\\\",\\\"MiddleName\\\":\\\"peter\\\",\\\"hed__Gender__c\\\":\\\"Male\\\",\\\"Birthdate\\\":\\\"2016-06-19\\\",\\\"Year_Level__c\\\":\\\"Preschool\\\",\\\"CI_Disability__c\\\":true,\\\"CI_CYPC__c\\\":false,\\\"IES_Flag__c\\\":true,\\\"CI_Guardian_1_Salutation__c\\\":\\\"MS\\\",\\\"CI_Guardian_1_Last_Name__c\\\":\\\"SMITH\\\",\\\"CI_Guardian_1_First_Name__c\\\":\\\"MARIA\\\",\\\"CI_Guardian_1_Phone__c\\\":\\\"82095963\\\",\\\"CI_Guardian_1_Mobile__c\\\":\\\"0415555333\\\",\\\"CI_Guardian_1_Email__c\\\":\\\"maria.smith@gmail.com\\\",\\\"CI_Guardian_2_Salutation__c\\\":\\\"MR\\\",\\\"CI_Guardian_2_Last_Name__c\\\":\\\"SMITH\\\",\\\"CI_Guardian_2_First_Name__c\\\":\\\"Paul\\\",\\\"CI_Guardian_2_Phone__c\\\":\\\"82095555\\\",\\\"CI_Guardian_2_Mobile__c\\\":\\\"046652365\\\",\\\"CI_Guardian_2_Email__c\\\":\\\"paul.smith@gmail.com\\\"}]"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="student_eys_data_input" format="json">
+      <types:shape format="weave" example="examples/student_eys_mapping_input.json"><![CDATA[%dw 2.0
+
+type student_eys_data_input = Array<{|  edid: String,   title: String,   lastName: String,   firstName: String,   middleName: String,   gender: String,   birthDate: String,   yearLevel: String,   isDisable: String,   siteId: String,   cypc: String,   guardian1Salutation: String,   guardian1LastName: String,   guardian1FirstName: String,   guardian1Phone: String,   guardian1Mobile: String,   guardian1Email: String,   guardian2Salutation: String,   guardian2LastName: String,   guardian2FirstName: String,   guardian2Phone: String,   guardian2Mobile: String,   guardian2Email: String,   status: String|}> {"example": "[{\\\"edid\\\":\\\"109377369M\\\",\\\"title\\\":\\\"Student\\\",\\\"lastName\\\":\\\"SMITH\\\",\\\"firstName\\\":\\\"ARLA\\\",\\\"middleName\\\":\\\"\\\",\\\"gender\\\":\\\"FEMALE\\\",\\\"birthDate\\\":\\\"2017-06-10\\\",\\\"yearLevel\\\":\\\"Preschool\\\",\\\"isDisable\\\":\\\"Y\\\",\\\"siteId\\\":\\\"0219\\\",\\\"cypc\\\":\\\"N\\\",\\\"guardian1Salutation\\\":\\\"\\\",\\\"guardian1LastName\\\":\\\"\\\",\\\"guardian1FirstName\\\":\\\"\\\",\\\"guardian1Phone\\\":\\\"\\\",\\\"guardian1Mobile\\\":\\\"\\\",\\\"guardian1Email\\\":\\\"\\\",\\\"guardian2Salutation\\\":\\\"\\\",\\\"guardian2LastName\\\":\\\"\\\",\\\"guardian2FirstName\\\":\\\"\\\",\\\"guardian2Phone\\\":\\\"\\\",\\\"guardian2Mobile\\\":\\\"\\\",\\\"guardian2Email\\\":\\\"\\\",\\\"status\\\":\\\"A\\\"},{\\\"edid\\\":\\\"108863558T\\\",\\\"title\\\":\\\"Student\\\",\\\"lastName\\\":\\\"DREW\\\",\\\"firstName\\\":\\\"HAZEL\\\",\\\"middleName\\\":\\\"\\\",\\\"gender\\\":\\\"FEMALE\\\",\\\"birthDate\\\":\\\"2018-03-13\\\",\\\"yearLevel\\\":\\\"Preschool\\\",\\\"isDisable\\\":\\\"N\\\",\\\"siteId\\\":\\\"6624\\\",\\\"cypc\\\":\\\"N\\\",\\\"guardian1Salutation\\\":\\\"\\\",\\\"guardian1LastName\\\":\\\"\\\",\\\"guardian1FirstName\\\":\\\"\\\",\\\"guardian1Phone\\\":\\\"\\\",\\\"guardian1Mobile\\\":\\\"\\\",\\\"guardian1Email\\\":\\\"\\\",\\\"guardian2Salutation\\\":\\\"\\\",\\\"guardian2LastName\\\":\\\"\\\",\\\"guardian2FirstName\\\":\\\"\\\",\\\"guardian2Phone\\\":\\\"\\\",\\\"guardian2Mobile\\\":\\\"\\\",\\\"guardian2Email\\\":\\\"\\\",\\\"status\\\":\\\"A\\\"},{\\\"edid\\\":\\\"109377369M\\\",\\\"title\\\":\\\"Student\\\",\\\"lastName\\\":\\\"SMITH\\\",\\\"firstName\\\":\\\"ARLA\\\",\\\"middleName\\\":\\\"\\\",\\\"gender\\\":\\\"FEMALE\\\",\\\"birthDate\\\":\\\"2017-06-10\\\",\\\"yearLevel\\\":\\\"Preschool\\\",\\\"isDisable\\\":\\\"Y\\\",\\\"siteId\\\":\\\"0219\\\",\\\"cypc\\\":\\\"N\\\",\\\"guardian1Salutation\\\":\\\"\\\",\\\"guardian1LastName\\\":\\\"\\\",\\\"guardian1FirstName\\\":\\\"\\\",\\\"guardian1Phone\\\":\\\"\\\",\\\"guardian1Mobile\\\":\\\"\\\",\\\"guardian1Email\\\":\\\"\\\",\\\"guardian2Salutation\\\":\\\"\\\",\\\"guardian2LastName\\\":\\\"\\\",\\\"guardian2FirstName\\\":\\\"\\\",\\\"guardian2Phone\\\":\\\"\\\",\\\"guardian2Mobile\\\":\\\"\\\",\\\"guardian2Email\\\":\\\"\\\"},{\\\"edid\\\":\\\"109377370J\\\",\\\"title\\\":\\\"Student\\\",\\\"lastName\\\":\\\"AGWU\\\",\\\"firstName\\\":\\\"AXEL\\\",\\\"middleName\\\":\\\"\\\",\\\"gender\\\":\\\"MALE\\\",\\\"birthDate\\\":\\\"2017-11-15\\\",\\\"yearLevel\\\":\\\"Preschool\\\",\\\"isDisable\\\":\\\"N\\\",\\\"siteId\\\":\\\"3624\\\",\\\"cypc\\\":\\\"N\\\",\\\"guardian1Salutation\\\":\\\"\\\",\\\"guardian1LastName\\\":\\\"\\\",\\\"guardian1FirstName\\\":\\\"\\\",\\\"guardian1Phone\\\":\\\"\\\",\\\"guardian1Mobile\\\":\\\"\\\",\\\"guardian1Email\\\":\\\"\\\",\\\"guardian2Salutation\\\":\\\"\\\",\\\"guardian2LastName\\\":\\\"\\\",\\\"guardian2FirstName\\\":\\\"\\\",\\\"guardian2Phone\\\":\\\"\\\",\\\"guardian2Mobile\\\":\\\"\\\",\\\"guardian2Email\\\":\\\"\\\",\\\"status\\\":\\\"A\\\"},{\\\"edid\\\":\\\"109377345A\\\",\\\"title\\\":\\\"Student\\\",\\\"lastName\\\":\\\"SHRESTHA\\\",\\\"firstName\\\":\\\"RUBEN\\\",\\\"middleName\\\":\\\"CHANDRA\\\",\\\"gender\\\":\\\"MALE\\\",\\\"birthDate\\\":\\\"2017-12-10\\\",\\\"yearLevel\\\":\\\"Preschool\\\",\\\"isDisable\\\":\\\"N\\\",\\\"siteId\\\":\\\"9063\\\",\\\"cypc\\\":\\\"N\\\",\\\"guardian1Salutation\\\":\\\"Mr\\\",\\\"guardian1LastName\\\":\\\"SHRESTHA\\\",\\\"guardian1FirstName\\\":\\\"RAHUL\\\",\\\"guardian1Phone\\\":\\\"\\\",\\\"guardian1Mobile\\\":\\\"0422588944\\\",\\\"guardian1Email\\\":\\\"raulshr@yahoo.com\\\",\\\"guardian2Salutation\\\":\\\"Mrs\\\",\\\"guardian2LastName\\\":\\\"ADHIKARI\\\",\\\"guardian2FirstName\\\":\\\"DEEPA\\\",\\\"guardian2Phone\\\":\\\"\\\",\\\"guardian2Mobile\\\":\\\"0412866138\\\",\\\"guardian2Email\\\":\\\"dpa_2005@yahoo.com\\\",\\\"status\\\":\\\"A\\\"}]"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="salesforce_eys_output_data" format="json">
+      <types:shape format="weave" example="examples/salesforce_fields_mapping_output_eys.json"><![CDATA[%dw 2.0
+
+type salesforce_eys_output_data = Array<{|  EDID__c: String,   Title: String,   Site_ID__c: String,   LastName: String,   FirstName: String,   MiddleName: String,   hed__Gender__c: String,   Birthdate: String,   Year_Level__c: String,   CI_Disability__c: Boolean,   CI_CYPC__c: Boolean,   IES_Flag__c: Boolean,   CI_Guardian_1_Salutation__c: String,   CI_Guardian_1_Last_Name__c: String,   CI_Guardian_1_First_Name__c: String,   CI_Guardian_1_Phone__c: String,   CI_Guardian_1_Mobile__c: String,   CI_Guardian_1_Email__c: String,   CI_Guardian_2_Salutation__c: String,   CI_Guardian_2_Last_Name__c: String,   CI_Guardian_2_First_Name__c: String,   CI_Guardian_2_Phone__c: String,   CI_Guardian_2_Mobile__c: String,   CI_Guardian_2_Email__c: String|}> {"example": "[{\\\"EDID__c\\\":\\\"102615171N\\\",\\\"Title\\\":\\\"Studnet\\\",\\\"Site_ID__c\\\":\\\"0102\\\",\\\"LastName\\\":\\\"IRON\\\",\\\"FirstName\\\":\\\"MAN\\\",\\\"MiddleName\\\":\\\"peter\\\",\\\"hed__Gender__c\\\":\\\"Male\\\",\\\"Birthdate\\\":\\\"2016-06-19\\\",\\\"Year_Level__c\\\":\\\"Preschool\\\",\\\"CI_Disability__c\\\":true,\\\"CI_CYPC__c\\\":false,\\\"IES_Flag__c\\\":true,\\\"CI_Guardian_1_Salutation__c\\\":\\\"MS\\\",\\\"CI_Guardian_1_Last_Name__c\\\":\\\"SMITH\\\",\\\"CI_Guardian_1_First_Name__c\\\":\\\"MARIA\\\",\\\"CI_Guardian_1_Phone__c\\\":\\\"82095963\\\",\\\"CI_Guardian_1_Mobile__c\\\":\\\"0415555333\\\",\\\"CI_Guardian_1_Email__c\\\":\\\"maria.smith@gmail.com\\\",\\\"CI_Guardian_2_Salutation__c\\\":\\\"MR\\\",\\\"CI_Guardian_2_Last_Name__c\\\":\\\"SMITH\\\",\\\"CI_Guardian_2_First_Name__c\\\":\\\"Paul\\\",\\\"CI_Guardian_2_Phone__c\\\":\\\"82095555\\\",\\\"CI_Guardian_2_Mobile__c\\\":\\\"046652365\\\",\\\"CI_Guardian_2_Email__c\\\":\\\"paul.smith@gmail.com\\\"},{\\\"EDID__c\\\":\\\"102615171N\\\",\\\"Title\\\":\\\"Studnet\\\",\\\"Site_ID__c\\\":\\\"0102\\\",\\\"LastName\\\":\\\"IRON\\\",\\\"FirstName\\\":\\\"MAN\\\",\\\"MiddleName\\\":\\\"peter\\\",\\\"hed__Gender__c\\\":\\\"Male\\\",\\\"Birthdate\\\":\\\"2016-06-19\\\",\\\"Year_Level__c\\\":\\\"Preschool\\\",\\\"CI_Disability__c\\\":true,\\\"CI_CYPC__c\\\":false,\\\"IES_Flag__c\\\":true,\\\"CI_Guardian_1_Salutation__c\\\":\\\"MS\\\",\\\"CI_Guardian_1_Last_Name__c\\\":\\\"SMITH\\\",\\\"CI_Guardian_1_First_Name__c\\\":\\\"MARIA\\\",\\\"CI_Guardian_1_Phone__c\\\":\\\"82095963\\\",\\\"CI_Guardian_1_Mobile__c\\\":\\\"0415555333\\\",\\\"CI_Guardian_1_Email__c\\\":\\\"maria.smith@gmail.com\\\",\\\"CI_Guardian_2_Salutation__c\\\":\\\"MR\\\",\\\"CI_Guardian_2_Last_Name__c\\\":\\\"SMITH\\\",\\\"CI_Guardian_2_First_Name__c\\\":\\\"Paul\\\",\\\"CI_Guardian_2_Phone__c\\\":\\\"82095555\\\",\\\"CI_Guardian_2_Mobile__c\\\":\\\"046652365\\\",\\\"CI_Guardian_2_Email__c\\\":\\\"paul.smith@gmail.com\\\"}]"}
+
+]]></types:shape>
+    </types:type>
+    <types:type name="students_upsert_request" format="json">
+      <types:shape format="json-schema" location="schemas/students_request"/>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#a0422492-4ca9-44ba-ab44-68f2c12029e5">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="student_eys_data_input"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="salesforce_eys_output_data"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#a308fda3-45f8-4b2f-a53f-e24e4031541f">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="student_ceds_input_data"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="salesforce_ceds_output_data"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#352c2f41-06ed-4ef2-bf5c-4c9ff080d50d">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="student_ceds_input_data"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="salesforce_ceds_output_data"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#fd51e014-81d3-4681-95b1-254ac413f7fa">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="student_eys_data_input"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="salesforce_eys_output_data"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#58137fca-ef55-4c35-afb9-2c89c2cf8446">
+    <types:processor-declaration>
+      <types:output-event>
+        <types:message>
+          <types:payload type="students_upsert_request"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#950fe3a6-f16e-4ee7-952c-439e2610f7b9"/>
+  <types:enrichment select="#b2039e2d-c437-4c30-a704-d0e1bc8e9d30"/>
+  <types:enrichment select="#33bcfa5d-47ea-4504-9b20-0214c6a42204"/>
+  <types:enrichment select="#08e1917a-2313-4749-80bb-1bce261a631d"/>
+  <types:enrichment select="#3a5ce052-0466-4c0e-94c7-66e5a3da6abf"/>
+  <types:enrichment select="#d755941a-0595-44c5-921b-7b50ebba33e9"/>
+  <types:enrichment select="#d4ef3964-05cb-47fd-8578-1432bab2a68d"/>
+  <types:enrichment select="#0c59ae94-dd78-4827-a7c0-72530e080671"/>
+  <types:enrichment select="#51bf9c8a-b0d1-43ee-8d65-46c9ac9a49f1"/>
+  <types:enrichment select="#3102e9c8-dbaa-4e7e-a101-9b0cae1e2c05"/>
+</types:mule>

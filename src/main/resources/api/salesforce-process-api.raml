@@ -1,0 +1,156 @@
+#%RAML 1.0
+title: salesforce-process-api
+mediaType: [application/json, application/csv]
+version: v1
+protocols: [HTTP, HTTPS]
+
+traits:
+  pageable:
+    queryParameters:
+      page:
+        displayName: The Page Number of the list of Records
+        type: number
+        format: int
+        required: false
+        default: 1
+      limit:
+        displayName: Number of Records present in each Page
+        type: number
+        format: int
+        required: false
+        default: 1
+  sourceIdHeader:
+    headers:
+      X-Source-Id:
+        displayName: X-Source-Id
+        type: string
+        description: Source of the request
+        required: false
+  lastUpdatedOn:
+    queryParameters:
+      last-updated-on:
+        displayName: Time from last update
+        required: false
+        type: datetime-only
+  contentTypeHeader:
+    headers:
+      Accept: 
+        displayName: Retrive the Content Type for Conversion
+        required: false
+        enum: [application/json,application/csv]
+        default: application/json
+
+/health:
+  get:
+    displayName: Get Health
+    description: Return message to indicate the system health status   
+    responses:
+      200:
+        body:
+          application/csv:
+          application/json:
+          
+/students:
+  get:
+    is:
+      - pageable
+      - sourceIdHeader
+      - contentTypeHeader
+      - lastUpdatedOn
+    displayName: Student Get Operation to Integrate with Salesforce
+    description: Student Get Operation to Integrate with Salesforce and CEDS, EYS and EMS Database.        
+    responses:
+      200:
+        body:
+          application/csv:
+          application/json:
+           
+  /guardians:
+    get:
+      is:
+      - pageable
+      - sourceIdHeader
+      - contentTypeHeader
+      - lastUpdatedOn
+      displayName: Guardians GET Operation to Integrate with Salesforce
+      description: Guardians GET Operation to Integrate with Salesforce and CEDS, EYS and EMS Database. 
+      responses:
+        200:
+          body:
+            application/csv:
+            application/json:       
+  /sites:
+    get:
+      is:
+      - pageable
+      - sourceIdHeader
+      - contentTypeHeader
+      - lastUpdatedOn
+      displayName: Sites GET Operation to Integrate with Salesforce
+      description: Sites GET Operation to Integrate with Salesforce and CEDS, EYS and EMS Database.  
+      responses:
+        200:
+          body:
+            application/csv:
+            application/json: 
+                      
+/relationships:
+    get:
+      displayName: Relationships GET Operation to Integrate with Salesforce
+      description: Relationships GET Operation to Integrate with Salesforce and CEDS, EYS and EMS Database  
+      responses:
+        200:
+          body:
+            application/csv:
+            application/json:
+/staff:
+  get:
+    is:
+      - pageable
+      - sourceIdHeader
+      - contentTypeHeader
+      - lastUpdatedOn
+    displayName: Staff GET Operation to integrate with Salesforce 
+    description: Staff GET Operation to integrate with Salesforce and IDM Database    
+    responses:
+      200:
+        body:
+          application/csv:
+          application/json:  
+  /sites:
+    get:
+      is:
+        - pageable
+        - lastUpdatedOn
+        - contentTypeHeader
+        - sourceIdHeader
+      displayName: Sites Get Operartion to integrate with Salesforce
+      description: Sites GET Operation to integrate with Salesforce and IDM Database   
+      responses:
+        200:
+          body:
+            application/csv:
+            application/json:   
+            
+/sites:
+  get:
+    is:
+      - pageable
+      - contentTypeHeader
+      - sourceIdHeader 
+    displayName: Get operation to upsert Sites data in salesforce 
+    description: Sites GET Operation to integrate with Salesforce and LSS Database  
+    queryParameters:
+      fromDate:
+        displayName: Time from Date
+        required: false
+      toDate:
+        displayName: Time To date
+        required: false
+    responses:
+      200:
+        body:
+          application/csv:
+          application/json:
+       
+ 

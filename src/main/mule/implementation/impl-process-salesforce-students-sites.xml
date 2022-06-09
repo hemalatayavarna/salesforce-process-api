@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<sub-flow name="impl-process-salesforce-api:students-sites:sub_flow" doc:id="c1e9e048-a60f-4c58-83b4-39e0b04465d3" >
+		<logger level="INFO" doc:name="Log Start Implementation Sites Flow" doc:id="b3067eeb-77d7-46bd-a785-3fd5c5b5a979" message="Start Implementation Sites Flow"/>
+		<ee:transform doc:name="Set requestedSourceSystems, httpQueryParams and httpHeaders" doc:id="2e509e4c-21c1-4ebc-b6c8-52fc237e76f3" >
+			<ee:message />
+			<ee:variables >
+				<ee:set-variable variableName="httpQueryParams" ><![CDATA[%dw 2.0
+output application/java
+import p from Mule
+var lastUpdatedOn= attributes.queryParams.'last-updated-on'
+import getLastUpdatedDate from modules::getAllFunctions
+---
+{
+	"last-updated-on": getLastUpdatedDate(attributes.queryParams.'last-updated-on'),
+	"page":p('default.page'),
+	"limit":p('default.limit')
+}]]></ee:set-variable>
+				<ee:set-variable variableName="httpHeaders" ><![CDATA[%dw 2.0
+output application/java
+import p from Mule
+---
+{
+	'X-Source-Id': p('source.id'),
+	'Accept': p('default.api.accept.header')
+}]]></ee:set-variable>
+				<ee:set-variable variableName="requestedSourceSystems" ><![CDATA[%dw 2.0
+output application/java
+---
+["CEDS","EMS","EYS"]]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<scatter-gather doc:name="Scatter-Gather" doc:id="6589c75e-3513-4696-9447-64b4ff213571" >
+			<route >
+				<flow-ref doc:name="impl-process-salesforce-students-sites-ceds:sub_flow" doc:id="94382b52-736d-41f6-9e8f-2713b67a0eb0" name="impl-process-salesforce-students-sites-ceds:sub_flow"/>
+			</route>
+			<route >
+				<flow-ref doc:name="impl-process-salesforce-students-sites-eys:sub_flow" doc:id="2ee9db95-9ad6-41b1-826f-646b9dcd92b4" name="impl-process-salesforce-students-sites-eys:sub_flow"/>
+			</route>
+			<route >
+				<flow-ref doc:name="impl-process-salesforce-students-sites-ems:sub_flow" doc:id="12c004c5-7164-4759-bdd0-ec4da4542b35" name="impl-process-salesforce-students-sites-ems:sub_flow"/>
+			</route>
+		</scatter-gather>
+		<logger level="INFO" doc:name="Log Scatter Gather Completed" doc:id="a2be2855-5775-4021-b03d-b30ec43e66f8" />
+		<logger level="INFO" doc:name="Log End Implementation sites flow" doc:id="45b40d49-90ec-4928-9ae1-9391fff967d8" message="End Implementation sites flow"/>
+	</sub-flow>
+	<sub-flow name="impl-process-salesforce-students-sites-ceds:sub_flow" doc:id="8da7d8c8-30b1-496c-aa14-b432dfe0b0ca" >
+		<logger level="INFO" doc:name="Log Start CEDS Sites Flow" doc:id="41c5746b-ac11-483a-8844-eb78e4f09567" message="Start CEDS Sites Flow"/>
+		<ee:transform doc:name="Set Variables sourceSystem, httpUriPath" doc:id="defa6e9b-73e8-45ed-908b-de7f34940582" >
+			<ee:message />
+			<ee:variables >
+				<ee:set-variable variableName="httpUriPath" ><![CDATA[p('ceds.system.api.students.sites.path')]]></ee:set-variable>
+				<ee:set-variable variableName="sourceSystem" ><![CDATA[p('source.system.ceds')]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<choice doc:name="Check" doc:id="85c12525-74a0-417a-90fb-083ad0513b0f" >
+			<when expression="#[vars.requestedSourceSystems contains p('source.system.ceds')]">
+				<logger level="INFO" doc:name="Log Start CEDS Sites Flow" doc:id="a6897405-4d48-41d3-96da-28d4944970d8" message="Start CEDS Sites Flow"/>
+				<flow-ref doc:name="system-ceds-api:get-ceds-students-api:sub_flow" doc:id="db269242-7299-498d-91fb-080848774662" name="system-ceds-api:get-ceds-students-api:sub_flow"/>
+				<flow-ref doc:name="impl-process-salesforce-students-sites-salesforce:sub_flow" doc:id="14150700-5b45-4188-9ab0-0c3176632fcc" name="impl-process-salesforce-students-sites-salesforce:sub_flow"/>
+				<logger level="INFO" doc:name="Log End CEDS Sites flow" doc:id="1c7a6193-cc8b-47e4-8c93-6ec607cb9cb3" />
+			</when>
+			<otherwise >
+				<logger level="DEBUG" doc:name="Log Choice Condition (DEBUG)" doc:id="22cd66d1-0f78-4565-a32b-50144e582e11" message="Salesforce Transaction Request doesnt need CEDS Data" />
+			</otherwise>
+		</choice>
+	</sub-flow>
+	<sub-flow name="impl-process-salesforce-students-sites-eys:sub_flow" doc:id="c6d7b367-6d58-46d1-9931-707ae5b344cc" >
+		<logger level="INFO" doc:name="Log Start EYS Sites Flow" doc:id="7c0670fe-4ee4-4b0d-82a0-11557f41184d" message="Start EYS Sites Flow" />
+		<ee:transform doc:name="Set Variables sourceSystem, httpUriPath" doc:id="cd43e125-2366-48f7-8cd0-23ad2243ecca" >
+			<ee:message />
+			<ee:variables >
+				<ee:set-variable variableName="httpUriPath" ><![CDATA[p('eys.system.api.students.sites.path')]]></ee:set-variable>
+				<ee:set-variable variableName="sourceSystem" ><![CDATA[p('source.system.eys')]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<choice doc:name="Check" doc:id="e0e07581-c16c-44d0-abce-6ad332a00385" >
+			<when expression="#[vars.requestedSourceSystems contains p('source.system.eys')]">
+				<logger level="INFO" doc:name="Log Start EYS Sites Flow" doc:id="7905d194-e3e6-4241-a3c6-5783d2192b82" message="Start EYS Sites Flow" />
+				<flow-ref doc:name="system-eys-api:get-eys-students-sites:subflow" doc:id="6a1b6c25-6633-418a-93fe-62a73e97da2d" name="system-eys-api:get-eys-students:sub_flow" />
+				<flow-ref doc:name="impl-process-salesforce-students-sites-salesforce:sub_flow" doc:id="aee3b74c-0d04-4778-99cf-73c59d9c61f0" name="impl-process-salesforce-students-sites-salesforce:sub_flow"/>
+				<logger level="INFO" doc:name="Log End EYS Sites Flow" doc:id="09dc6708-3233-4d51-a207-c447f2fd3445" message="End EYS Sites Flow"/>
+			</when>
+			<otherwise >
+				<logger level="DEBUG" doc:name="Log Choice Condition (DEBUG)" doc:id="749fda45-205b-41df-af05-fcd55430a9d0" message="Salesforce Transaction Request doesnt need EYS Data" />
+			</otherwise>
+		</choice>
+	</sub-flow>
+	<sub-flow name="impl-process-salesforce-students-sites-ems:sub_flow" doc:id="0bc7fa77-61e1-4714-ab34-c9f5d29e82ce" >
+		<logger level="INFO" doc:name="Log Start EMS Sites Flow" doc:id="30c06db5-84b9-4eba-bec8-19105b7b0671" message="Start EMS Sites Flow"/>
+		<ee:transform doc:name="Set Variables sourceSystem, httpUriPath" doc:id="440567d8-d655-4827-a07c-cf843c24aaeb" >
+			<ee:message />
+			<ee:variables >
+				<ee:set-variable variableName="httpUriPath" ><![CDATA[p('ems.system.api.students.sites.path')]]></ee:set-variable>
+				<ee:set-variable variableName="sourceSystem" ><![CDATA[p('source.system.ems')]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<choice doc:name="Check" doc:id="657e94ba-d967-4ac6-99e4-2201a338b326" >
+			<when expression="#[vars.requestedSourceSystems contains p('source.system.ems')]">
+				<logger level="INFO" doc:name="Log Start EMS Sites Flow" doc:id="3a12d394-7514-4fa6-9b11-16a50db1044e" message="Start EMS Sites Flow"/>
+				<flow-ref doc:name="system-ems-api:get-ems-students-sites:subflow" doc:id="e244e148-3d5c-4c72-ab06-66a22ada0c45" name="system-ems-api:get-ems-students-api:sub_flow" />
+				<flow-ref doc:name="impl-process-salesforce-students-sites-salesforce:sub_flow" doc:id="f55a4e9c-5536-4d31-a570-59eb98df267a" name="impl-process-salesforce-students-sites-salesforce:sub_flow"/>
+				<logger level="INFO" doc:name="Log End EMS Sites Flow" doc:id="17600221-d938-437a-8786-6c2255240106" message="End EMS Sites Flow"/>
+			</when>
+			<otherwise >
+				<logger level="DEBUG" doc:name="Log Choice Condition (DEBUG)" doc:id="9234b1e8-07bd-4405-a99e-29dc889aafb2" message="Salesforce Transaction Request doesnt need EMS Data" />
+			</otherwise>
+		</choice>
+	</sub-flow>
+	<sub-flow name="impl-process-salesforce-students-sites-salesforce:sub_flow" doc:id="a7178663-74ff-4456-a42d-819fc68aba1c" >
+		<logger level="INFO" doc:name="Log Start Sites Salesforce Flow" doc:id="9b138b4d-b509-495a-b478-ded887ae96d6" message="Start Sites Salesforce Flow"/>
+		<ee:transform doc:name="Transform to Salesforce Sites Affiliation Request" doc:id="ceda7f89-b33b-45c1-98aa-c160032cc05a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/csv
+import p from Mule
+---
+payload map (item , index)	->	{
+	affiliationType: p('affiliationType.static.student'),
+	affiliationId: item.edId ++ item.orgUnitId,
+	isPrimary: item.isPrimary,
+	affiliationStatus: item.studentStatus,
+	contactId: item.edId,
+	accountId: item.orgUnitId,
+	startDate: item.enrolmentStartDate,
+	endDate: item.enrolmentEndDate
+}]]></ee:set-payload>
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="salesforceRequestHeaders" ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	'Content-Type':p('default.api.content.type')
+}]]></ee:set-variable>
+				<ee:set-variable variableName="httpUriPath" ><![CDATA[p('salesforce.system.api.affiliations.path')]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<logger level="INFO" doc:name="Log Payload Size" doc:id="2841fb63-26b0-449d-9cae-eb606421b80b" message='#[%dw 2.0&#10;output text/plain&#10;---&#10;"System = " ++ vars.sourceSystem ++ " | No. of Students Sites Records =" ++ sizeOf(payload)]' />
+		<flow-ref doc:name="system-salesforce-api:post-affiliations-sites:sub_flow" doc:id="fa55a89a-7562-4337-9c67-a467c52d131d" name="system-salesforce-api:post-contacts:sub_flow"/>
+		<logger level="INFO" doc:name="Log End Sites Salesforce Flow" doc:id="3062790a-c2b5-4ed5-b158-ed2309702b24" message="End Sites Salesforce Flow" />
+	</sub-flow>
+</mule>

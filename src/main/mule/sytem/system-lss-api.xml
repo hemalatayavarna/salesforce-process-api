@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<sub-flow name="system-lss-api:get-lss-sites:subflow" doc:id="ca9b846c-fb8b-4238-a3ad-281ecb3656e4" >
+		<logger level="INFO" doc:name="Log Start Get LSS System API" doc:id="6194d92c-d830-4d20-9b49-93c31b1621a3" message="Start Get LSS System API Flow"/>
+		<http:request method="GET" doc:name="Get LSS System API Data" doc:id="0ef13a8e-91a9-4a5a-927d-1a3f81cc5a85" config-ref="lss-db-system-api-httpRequesterConfig" path="#[vars.httpUriPath]">
+			<http:headers ><![CDATA[#[vars.httpHeaders]]]></http:headers>
+			<http:query-params ><![CDATA[#[vars.httpQueryParams]]]></http:query-params>
+		</http:request>
+		<logger level="INFO" doc:name="Log End Get LSS System API" doc:id="8141eccc-16fe-45be-b11b-0439be9975db" message="End Get LSS System API Flow"/>
+	</sub-flow>
+</mule>

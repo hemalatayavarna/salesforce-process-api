@@ -1,0 +1,4 @@
+edId,isPrimary,schoolName,fte,studentRowNumber,enrolmentEndDate,enrolmentStartDate,studentStatus,orgUnitId,lastUpdatedOn,yearLevel
+104974650A,false,Greenock Primary School,1,1,2021-12-10T00:00:00,2017-01-30T00:00:00,N,0160,2022-01-28T14:56:43.4877886,Year 7
+105158274P,false,Greenock Primary School,1,1,2021-12-10T00:00:00,2014-01-28T00:00:00,N,0160,2022-01-28T14:56:43.4877886,Year 7
+105356402X,false,Greenock Primary School,1,1,2021-12-10T00:00:00,2018-08-09T00:00:00,N,0160,2022-01-28T14:56:43.4877886,Year 7
